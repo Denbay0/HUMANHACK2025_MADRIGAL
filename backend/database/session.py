@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-# Путь к файлу SQLite (файл mydatabase.db находится в папке backend)
-SQLALCHEMY_DATABASE_URL = "sqlite:///backend/mydatabase.db"
+# Новая строка подключения: база данных хранится в файле user.db в папке backend
+SQLALCHEMY_DATABASE_URL = "sqlite:///backend/user.db"
 
-# Параметр check_same_thread=False нужен для работы SQLite в многопоточном режиме
+# SQLite требует параметр check_same_thread=False для работы в многопоточном режиме
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
     connect_args={"check_same_thread": False}
@@ -13,7 +13,7 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Создаем базовый класс для моделей SQLAlchemy
+# Базовый класс для моделей SQLAlchemy
 Base = declarative_base()
 
 def get_db():
