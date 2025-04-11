@@ -12,7 +12,7 @@ if str(BASE_DIR) not in sys.path:
 PROJECT_MODULE = "connections"
 
 class Settings(BaseSettings):
-    SECRET_KEY: str = "YOUR_SECRET_KEY_HERE"  # Замените на реальное значение в продакшене
+    SECRET_KEY: str = "YOUR_SECRET_KEY_HERE"   # Обязательно поменяйте для продакшена
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
