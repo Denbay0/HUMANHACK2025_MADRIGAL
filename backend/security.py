@@ -4,7 +4,6 @@ from passlib.context import CryptContext
 
 from backend.config import settings
 
-# Настраиваем CryptContext для хеширования паролей (используем bcrypt)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_password_hash(password: str) -> str:
