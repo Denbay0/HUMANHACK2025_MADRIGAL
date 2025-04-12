@@ -14,7 +14,6 @@ class SessionManager:
 
     def create_session(self, conn_type, hostname, port=22, username=None, password=None, key_filename=None, timeout=10):
         session_id = str(uuid.uuid4())
-        
         connection_class = None
         if conn_type.lower() == 'ssh':
             connection_class = SSHConnection
@@ -45,3 +44,5 @@ class SessionManager:
             del self.sessions[session_id]
         else:
             raise Exception("Сессия не найдена")
+
+session_manager = SessionManager()

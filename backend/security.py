@@ -34,10 +34,18 @@ def decode_access_token(token: str) -> dict:
         return payload
     except JWTError as e:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, 
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Token validation error: {str(e)}"
         )
 
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+) -> User:
+    """
+    Извлекает пользователя из токена (ожидается, что поле 'sub' содержит id пользователя).
+    Токен передается стандартно через заголовок Authorization (Bearer).
+    """
 def get_user_from_token(token: str, db: Session) -> User:
     print("Полученный токен:", token)
     
@@ -48,21 +56,29 @@ def get_user_from_token(token: str, db: Session) -> User:
     payload = decode_access_token(token)
     user_id = payload.get("sub")
     if user_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token payload"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+    return user
+
+def get_user_from_token(token: str, db: Session) -> User:
+    """
+    Извлекает пользователя, используя токен, переданный в теле запроса или как параметр,
+    и удаляет префикс "Bearer " (если есть). Ожидается, что в payload токена содержится поле 'sub'.
+    """
+    # Если токен начинается с "Bearer ", удаляем его
+    if token.startswith("Bearer "):
+        token = token[7:]
+    payload = decode_access_token(token)
+    user_id = payload.get("sub")
+    if user_id is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
     try:
         user_id = int(user_id)
     except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User id in token is not valid"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User id in token is not valid")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     return user

@@ -1,51 +1,72 @@
+// App_terminal.jsx
 import React, { useState, useEffect } from 'react';
 import './App_ssh.css';
 
 const ConnectionTabs = () => {
   const [activeTab, setActiveTab] = useState('ssh');
-  const [server, setServer] = useState(null); // Начинаем с null
+  const [server, setServer] = useState(null);
   const [sshCommand, setSshCommand] = useState('');
   const [rdpFile, setRdpFile] = useState({
     ip: '',
     port: 3389,
     username: ''
   });
-  const [error, setError] = useState(null); // Для обработки ошибок при загрузке данных
+  const [error, setError] = useState(null);
 
-  // Функция для загрузки данных с API
   useEffect(() => {
+    // Если у вас есть рабочий API, раскомментируйте код ниже и замените URL.
+    /*
     const fetchServerData = async () => {
       try {
-        const response = await fetch('https://api.example.com/servers'); // Замените на ваш реальный URL
+        const response = await fetch('https://api.example.com/servers');
         if (!response.ok) {
           throw new Error('Не удалось загрузить данные о серверах');
         }
         const data = await response.json();
         
         if (data && data.length > 0) {
-          setServer(data[0]); // Пример, выбираем первый сервер из списка
+          setServer(data[0]);
         } else {
           throw new Error('Серверы не найдены');
         }
       } catch (error) {
-        setError(error.message); // Записываем ошибку в состояние
+        setError(error.message);
       }
     };
-
     fetchServerData();
-  }, []); // useEffect с пустым массивом, чтобы выполнить запрос один раз при монтировании компонента
+    */
+    
+    // Заглушка (dummy data) для тестирования:
+    setTimeout(() => {
+      const dummyServer = {
+        id: 1,
+        name: "Test Server",
+        ip: "192.168.1.100",
+        user: "testuser"
+      };
+      setServer(dummyServer);
+    }, 1000);
+  }, []);
 
-  // Если ошибка при загрузке данных о сервере
+  useEffect(() => {
+    if (server) {
+      setSshCommand(`ssh ${server.user}@${server.ip}`);
+      setRdpFile({
+        ip: server.ip,
+        port: 3389,
+        username: server.user,
+      });
+    }
+  }, [server]);
+
   if (error) {
     return <div className="error">Ошибка: {error}</div>;
   }
 
-  // Если сервер еще не загружен
   if (!server) {
     return <div>Загрузка...</div>;
   }
 
-  // Обработчики для копирования команд и скачивания RDP файла
   const copyToClipboard = (text) => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text);
@@ -70,18 +91,6 @@ const ConnectionTabs = () => {
     a.download = `${server.name}.rdp`;
     a.click();
   };
-
-  // Устанавливаем SSH команду в зависимости от данных о сервере
-  useEffect(() => {
-    if (server) {
-      setSshCommand(`ssh ${server.user}@${server.ip}`);
-      setRdpFile({
-        ip: server.ip,
-        port: 3389,
-        username: server.user,
-      });
-    }
-  }, [server]);
 
   return (
     <main className="body">

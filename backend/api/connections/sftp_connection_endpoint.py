@@ -1,10 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from connections.session_manager import SessionManager
+from connections.session_manager import session_manager
 
 router = APIRouter(prefix="/connections/sftp", tags=["SFTP Connections"])
-
-session_manager = SessionManager()
 
 class SFTPConnectionRequest(BaseModel):
     hostname: str

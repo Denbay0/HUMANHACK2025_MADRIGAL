@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
 import './App_prof.css';
 
-// Модальное окно редактирования профиля
-// Модальное окно редактирования профиля с вкладкой смены пароля
-function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword }) {
+const getUserIdFromLocalStorage = () => {
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    console.log("User ID found in localStorage:", userId);
+    return parseInt(userId, 10);
+  } else {
+    console.error("User ID not found in localStorage");
+    return null;
+  }
+};
+
+function EditProfileModal({ user, onClose, onSave, onDelete }) {
   const initialFormState = {
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -48,51 +57,43 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
     }
 
     try {
-      // 1. Отправляем запрос на сервер для проверки старого пароля
-      const response = await fetch('https://your-server.com/api/check-password', {
+      const checkResponse = await fetch('http://localhost:8000/auth/check-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          username: user.username,
           oldPassword: passwordData.oldPassword,
-          username: user.username, // или можно передать ID пользователя
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Не удалось проверить пароль');
+      const checkData = await checkResponse.json();
+      if (!checkResponse.ok) {
+        throw new Error(checkData.error || 'Не удалось проверить пароль');
       }
 
-      // 2. Если старый пароль правильный, отправляем новый пароль
-      const updateResponse = await fetch('https://your-server.com/api/update-password', {
+      const updateResponse = await fetch('http://localhost:8000/auth/update-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          username: user.username,
           newPassword: passwordData.newPassword,
-          username: user.username, // или можно передать ID пользователя
         }),
       });
 
       const updateData = await updateResponse.json();
-
       if (!updateResponse.ok) {
         throw new Error(updateData.error || 'Не удалось обновить пароль');
       }
 
-      alert('Пароль успешно изменен');
+      alert('Пароль успешно изменён');
       setPasswordData({
-        oldPassword: '',
-        newPassword: '',
-        confirmNewPassword: '',
+        oldPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
       });
     } catch (error) {
-      console.error('Ошибка при изменении пароля:', error);
-      alert(error.message || 'Ошибка при изменении пароля');
+      console.error("Ошибка при изменении пароля:", error);
+      alert(error.message || "Ошибка при изменении пароля");
     }
   };
 
@@ -101,7 +102,7 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
   };
 
   const handleChangeTab = () => {
-    setIsPasswordTab(!isPasswordTab);
+    setIsPasswordTab(prev => !prev);
   };
 
   const timezones = [
@@ -125,7 +126,7 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
             Сменить пароль
           </button>
           <button onClick={handleChangeTab} className={!isPasswordTab ? "active" : ""}>
-            Редактировать профиль
+            Создать новый сервер
           </button>
         </div>
 
@@ -140,7 +141,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 onChange={handlePasswordChange}
               />
             </div>
-
             <div className="form-group">
               <label>Новый пароль:</label>
               <input
@@ -150,7 +150,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 onChange={handlePasswordChange}
               />
             </div>
-
             <div className="form-group">
               <label>Подтвердите новый пароль:</label>
               <input
@@ -160,7 +159,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 onChange={handlePasswordChange}
               />
             </div>
-
             <div className="modal-actions">
               <button type="submit" className="save-btn">Сменить пароль</button>
             </div>
@@ -176,7 +174,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 onChange={handleChange}
               />
             </div>
-
             <div className="form-group">
               <label>Фамилия:</label>
               <input
@@ -186,7 +183,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 onChange={handleChange}
               />
             </div>
-
             <div className="form-group">
               <label>Email:</label>
               <input
@@ -196,7 +192,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 onChange={handleChange}
               />
             </div>
-
             <div className="form-group">
               <label>Логин:</label>
               <input
@@ -206,7 +201,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 disabled
               />
             </div>
-
             <div className="form-group">
               <label>Часовой пояс:</label>
               <select
@@ -219,7 +213,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
                 ))}
               </select>
             </div>
-
             <div className="modal-actions">
               <button type="submit" className="save-btn">Сохранить изменения</button>
               <button type="button" className="reset-btn" onClick={handleReset}>Сбросить</button>
@@ -232,7 +225,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
   );
 }
 
-// Компонент профиля пользователя и список серверов
 function Profile({ user, servers, isLoading, onEditProfile }) {
   return (
     <div className="profile">
@@ -242,14 +234,12 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
         <>
           <h2 className="users">{user.firstName} {user.lastName}</h2>
           <p className="mail">{user.email}</p>
-
           <div className="servers-container">
             <div className="profile-actions">
-            <button className="edit-profile-btn" onClick={onEditProfile}>
-              Редактировать профиль
-            </button>
+              <button className="edit-profile-btn" onClick={onEditProfile}>
+                Создать новый сервер
+              </button>
             </div>
-
             <h3 className="servers-title">Мои серверы</h3>
             {servers.length > 0 ? (
               <div className="servers-list">
@@ -257,10 +247,18 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
                   <div key={server.id} className={`server-card ${server.isActive ? 'online' : 'offline'}`}>
                     <h4 className="server-name">{server.name}</h4>
                     <div className="server-specs">
-                      <div className="spec-item"><span className="spec-label">CPU:</span> {server.cpu}</div>
-                      <div className="spec-item"><span className="spec-label">RAM:</span> {server.ram}</div>
-                      <div className="spec-item"><span className="spec-label">Storage:</span> {server.storage}</div>
-                      <div className="spec-item"><span className="spec-label">Price:</span> {server.price}</div>
+                      <div className="spec-item">
+                        <span className="spec-label">CPU:</span> {server.cpu}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">RAM:</span> {server.ram}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">Storage:</span> {server.storage}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">Price:</span> {server.price}
+                      </div>
                     </div>
                     <div className={`server-status ${server.isActive ? 'online' : 'offline'}`}>
                       {server.isActive ? '🟢 Online' : '🔴 Offline'}
@@ -278,109 +276,91 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
   );
 }
 
-// Главный компонент приложения
 function App() {
+  const initialUserId = getUserIdFromLocalStorage();
+  console.log("Initial user id from localStorage:", initialUserId);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({
-    firstName: 'Влад',
-    lastName: 'Афонин',
-    email: 'afonin@example.com',
-    username: 'afonin.vlad',
-    timezone: 'UTC+3:00'
+    id: initialUserId,
+    firstName: "Влад",
+    lastName: "Афонин",
+    email: "afonin@example.com",
+    username: "afonin.vlad",
+    timezone: "UTC+3:00"
   });
   const [servers, setServers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  const mockServersData = [
-    {
-      id: 1,
-      name: "Игровой сервер",
-      cpu: "4 vCPU",
-      ram: "16 GB RAM",
-      storage: "320 GB SSD",
-      price: "$99 / mo (≈ 7500 руб)",
-      isActive: true
-    },
-    {
-      id: 2,
-      name: "Веб-хостинг",
-      cpu: "2 vCPU",
-      ram: "8 GB RAM",
-      storage: "160 GB SSD",
-      price: "$49 / mo (≈ 3700 руб)",
-      isActive: false
-    },
-    {
-      id: 3,
-      name: "База данных",
-      cpu: "8 vCPU",
-      ram: "32 GB RAM",
-      storage: "640 GB SSD",
-      price: "$199 / mo (≈ 15000 руб)",
-      isActive: true
-    }
-  ];
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchServers = async () => {
       try {
-        // Здесь будет реальный fetch если нужно
-        setServers(mockServersData);
+        console.log("Fetching servers for user id:", user.id);
+        const jwt = localStorage.getItem("token");
+        const response = await fetch(`http://localhost:8000/users/${user.id}/servers?jwt_token=${encodeURIComponent(jwt)}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Servers data received:", data);
+          const allServers = Object.values(data).flat();
+          setServers(allServers);
+        } else {
+          console.error("Ошибка загрузки серверов, статус", response.status);
+        }
       } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
+        console.error("Ошибка загрузки серверов:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    if (user && user.id) {
+      fetchServers();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user.id]);
 
   const handleEditProfile = () => {
-    console.log("Редактирование профиля");
     setIsEditing(true);
   };
 
   const handleSaveProfile = async (updatedUser) => {
     try {
-      // Тут может быть реальный fetch
       setUser(updatedUser);
       setIsEditing(false);
-      alert('Изменения сохранены!');
+      alert("Изменения сохранены!");
     } catch (error) {
-      console.error('Ошибка сохранения:', error);
-      alert('Ошибка при сохранении изменений');
+      console.error("Ошибка сохранения:", error);
+      alert("Ошибка при сохранении изменений");
     }
   };
 
   const handleDeleteProfile = () => {
-    if (window.confirm('Вы уверены, что хотите удалить профиль?')) {
+    if (window.confirm("Вы уверены, что хотите удалить профиль?")) {
       setUser({
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        timezone: ''
+        id: null,
+        firstName: "",
+        lastName: "",
+        email: "",
+        username: "",
+        timezone: ""
       });
       setIsEditing(false);
-      alert('Профиль удалён');
+      alert("Профиль удалён");
     }
   };
 
   return (
-    <main className='body'>
-      <div className='container'>
-        <div className='cub'></div>
-        <h1 className='name'>ServerLink</h1>
-        <hr className='line' />
-
+    <main className="body">
+      <div className="container">
+        <div className="cub"></div>
+        <h1 className="name">ServerLink</h1>
+        <hr className="line" />
         <Profile
           user={user}
           servers={servers}
           isLoading={isLoading}
           onEditProfile={handleEditProfile}
         />
-
         {isEditing && (
           <EditProfileModal
             user={user}

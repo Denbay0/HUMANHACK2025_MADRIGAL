@@ -7,8 +7,10 @@ backend/database/__pycache__
 
 backend/api/__pycache__
 backend/api/connections/__pycache__
+backend/api/sessions/__pycache__
 
 backend/connections/__pycache__
+backend/connections/web_socket/__pycache__
 backend/connections/all_types_connection/__pycache__
 backend/connections/all_types_connection/base/__pycache__
 
@@ -19,4 +21,3 @@ backend/connections/all_types_connection/sftp_type/__pycache__
 
 frontend/node_modules
 frontend/my-vite-react-app/.vite
-
