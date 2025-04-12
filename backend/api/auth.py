@@ -40,7 +40,6 @@ class UserLogin(BaseModel):
 
 @router.post("/register")
 def register(user_data: UserRegister, db: Session = Depends(get_db)):
-    # Проверка уникальности username
     existing_user = db.query(User).filter(User.username == user_data.username).first()
     if existing_user:
         raise HTTPException(
