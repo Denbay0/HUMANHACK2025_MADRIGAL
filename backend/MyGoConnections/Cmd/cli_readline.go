@@ -13,15 +13,20 @@ import (
 )
 
 func main() {
-	rl, err := readline.NewEx(&readline.Config{
-		Prompt:          "",                  // изначально пустой prompt
-		HistoryFile:     "/tmp/readline.tmp", // можно задать файл истории
-		InterruptPrompt: "^C",
-		EOFPrompt:       "exit",
-	})
-	if err != nil {
-		log.Fatalf("Ошибка при инициализации readline: %v", err)
+	newReadline := func() *readline.Instance {
+		rl, err := readline.NewEx(&readline.Config{
+			Prompt:          "",
+			HistoryFile:     "/tmp/readline.tmp",
+			InterruptPrompt: "^C",
+			EOFPrompt:       "exit",
+		})
+		if err != nil {
+			log.Fatalf("Ошибка при инициализации readline: %v", err)
+		}
+		return rl
 	}
+
+	rl := newReadline()
 	defer rl.Close()
 
 	sessionManager := connections.NewSessionManager()
@@ -96,7 +101,7 @@ func main() {
 	}
 	password = strings.TrimSpace(password)
 
-	// Запрос пути к ключевому файлу, если требуется
+	// Если SSH или SFTP, запрашиваем путь к ключевому файлу
 	var keyFile string
 	if connType == "ssh" || connType == "sftp" {
 		rl.SetPrompt("Введите путь к ключевому файлу (или оставьте пустым): ")
@@ -115,10 +120,11 @@ func main() {
 	}
 	fmt.Printf("Сессия создана с ID: %s\n", sessionID)
 
-	fmt.Println("Введите команду для выполнения (например, для FTP: LIST; для SFTP: ls /):")
+	fmt.Println("Введите команду для выполнения (например, для FTP: LIST; для SFTP: ls /).")
+	fmt.Println("Если используете интерактивную команду (например, vim) на SSH, просто введите её (без префиксов).")
 	fmt.Println("Введите 'exit' для завершения работы с сессией.")
 
-	// Цикл ввода команд с новым приглашением по каждому разу
+	// Главный цикл ввода команд
 	for {
 		rl.SetPrompt("Команда: ")
 		line, err := rl.Readline()
@@ -129,6 +135,17 @@ func main() {
 		if strings.ToLower(command) == "exit" {
 			break
 		}
+
+		// Если тип подключения SSH и команда начинается с "vim", выполняем интерактивно
+		if connType == "ssh" && strings.HasPrefix(command, "vim") {
+			err := sessionManager.ExecuteInteractiveCommand(sessionID, command)
+			if err != nil {
+				fmt.Printf("Ошибка выполнения интерактивной команды: %v\n", err)
+			}
+			continue
+		}
+
+		// Обычное удалённое выполнение команд
 		stdout, stderr, err := sessionManager.ExecuteCommand(sessionID, command)
 		if err != nil {
 			fmt.Printf("Ошибка выполнения команды: %v\n", err)

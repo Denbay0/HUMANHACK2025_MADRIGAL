@@ -21,7 +21,6 @@ func NewSessionManager() *SessionManager {
 
 func (sm *SessionManager) CreateSession(connType, hostname string, port int, username, password, keyFile string, timeout int) (string, error) {
 	var conn Connection
-
 	switch connType {
 	case "ssh":
 		conn = NewSSHConnection(hostname, port, username, password, keyFile, timeout)
@@ -32,11 +31,9 @@ func (sm *SessionManager) CreateSession(connType, hostname string, port int, use
 	default:
 		return "", fmt.Errorf("Неподдерживаемый тип подключения: %s", connType)
 	}
-
 	if err := conn.Connect(); err != nil {
 		return "", err
 	}
-
 	sessionID := uuid.NewString()
 	sm.mu.Lock()
 	sm.sessions[sessionID] = conn
@@ -52,6 +49,20 @@ func (sm *SessionManager) ExecuteCommand(sessionID, command string) (string, str
 		return "", "", fmt.Errorf("Сессия не найдена")
 	}
 	return conn.ExecuteCommand(command)
+}
+
+func (sm *SessionManager) ExecuteInteractiveCommand(sessionID, command string) error {
+	sm.mu.Lock()
+	conn, ok := sm.sessions[sessionID]
+	sm.mu.Unlock()
+	if !ok {
+		return fmt.Errorf("Сессия не найдена")
+	}
+	sshConn, ok := conn.(*SSHConnection)
+	if !ok {
+		return fmt.Errorf("Интерактивное выполнение поддерживается только для SSH-подключений")
+	}
+	return sshConn.ExecuteInteractiveCommand(command)
 }
 
 func (sm *SessionManager) CloseSession(sessionID string) error {

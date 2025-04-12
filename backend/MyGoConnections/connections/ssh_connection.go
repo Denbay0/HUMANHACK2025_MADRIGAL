@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"sync"
 	"time"
 
 	"golang.org/x/crypto/ssh"
+	"golang.org/x/term"
 )
 
 type SSHConnection struct {
@@ -75,11 +77,9 @@ func (s *SSHConnection) Connect() error {
 func (s *SSHConnection) ExecuteCommand(command string) (string, string, error) {
 	s.clientMu.Lock()
 	defer s.clientMu.Unlock()
-
 	if s.Client == nil {
 		return "", "", fmt.Errorf("[SSH] Соединение не установлено – вызовите Connect()")
 	}
-
 	session, err := s.Client.NewSession()
 	if err != nil {
 		return "", "", fmt.Errorf("[SSH] Не удалось создать сессию: %v", err)
@@ -93,8 +93,55 @@ func (s *SSHConnection) ExecuteCommand(command string) (string, string, error) {
 	if err := session.Run(command); err != nil {
 		return stdoutBuf.String(), stderrBuf.String(), fmt.Errorf("[SSH] Ошибка выполнения команды: %v", err)
 	}
-
 	return stdoutBuf.String(), stderrBuf.String(), nil
+}
+
+// Новый метод для интерактивного выполнения команд (например, vim)
+func (s *SSHConnection) ExecuteInteractiveCommand(command string) error {
+	s.clientMu.Lock()
+	defer s.clientMu.Unlock()
+	if s.Client == nil {
+		return fmt.Errorf("[SSH] Соединение не установлено – вызовите Connect()")
+	}
+	session, err := s.Client.NewSession()
+	if err != nil {
+		return fmt.Errorf("[SSH] Не удалось создать сессию: %v", err)
+	}
+	defer session.Close()
+
+	// Получаем размеры терминала
+	width, height, err := term.GetSize(int(os.Stdin.Fd()))
+	if err != nil {
+		width, height = 80, 24
+	}
+	// Определяем терминальные режимы
+	modes := ssh.TerminalModes{
+		ssh.ECHO:          1,
+		ssh.TTY_OP_ISPEED: 14400,
+		ssh.TTY_OP_OSPEED: 14400,
+	}
+	if err := session.RequestPty("xterm", height, width, modes); err != nil {
+		return fmt.Errorf("[SSH] Не удалось запросить pty: %v", err)
+	}
+
+	// Переводим терминал в raw-режим, чтобы обеспечить корректную работу интерактивных приложений
+	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+	if err != nil {
+		return fmt.Errorf("[SSH] Не удалось установить raw режим: %v", err)
+	}
+	defer term.Restore(int(os.Stdin.Fd()), oldState)
+
+	session.Stdin = os.Stdin
+	session.Stdout = os.Stdout
+	session.Stderr = os.Stderr
+
+	if err := session.Start(command); err != nil {
+		return fmt.Errorf("[SSH] Ошибка запуска интерактивной команды: %v", err)
+	}
+	if err := session.Wait(); err != nil {
+		return fmt.Errorf("[SSH] Ошибка ожидания завершения интерактивной команды: %v", err)
+	}
+	return nil
 }
 
 func (s *SSHConnection) Close() error {

@@ -9,6 +9,7 @@ require (
 	github.com/jlaffaye/ftp v0.2.0
 	github.com/pkg/sftp v1.13.9
 	golang.org/x/crypto v0.37.0
+	golang.org/x/term v0.31.0
 )
 
 require (
