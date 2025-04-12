@@ -1,23 +1,18 @@
-// Файл: pass.jsx
 import React, { useState } from 'react';
 import './password.css';
 
 function AuthPage() {
-  // Флаг: true – логин, false – регистрация
+
   const [isLogin, setIsLogin] = useState(true);
-  // Поля формы
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // Сообщение об ошибке (строка)
   const [error, setError] = useState('');
 
-  // Переключение между формами
   const toggleForm = () => {
     setError('');
     setIsLogin(!isLogin);
   };
 
-  // Обработчик запроса логина
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -45,14 +40,12 @@ function AuthPage() {
     }
   };
 
-  // Обработчик запроса регистрации (без параметра photo)
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch("http://localhost:8000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Теперь отправляем только username и password
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
@@ -65,7 +58,6 @@ function AuthPage() {
           setError(JSON.stringify(data));
         }
       } else {
-        // После успешной регистрации переключаем форму на логин
         setIsLogin(true);
         setError('');
       }

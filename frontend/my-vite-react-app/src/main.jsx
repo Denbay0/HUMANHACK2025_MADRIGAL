@@ -1,18 +1,18 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // добавляем BrowserRouter и Routes
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
-import App from './landing/App.jsx';            // Главная страница
-import Login from './login/pass.jsx';            // Страница логина/регистрации
-import ProfileApp from './profile/App_profile.jsx';        // Профиль (из App_profile.jsx)
+import App from './landing/App.jsx';
+import Login from './login/pass.jsx';
+import ProfileApp from './profile/App_profile.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />            {/* Главная страница */}
-        <Route path="/login" element={<Login />} />       {/* Страница логина */}
-        <Route path="/profile" element={<ProfileApp />} />  {/* Страница профиля */}
+        <Route path="/" element={<App />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<ProfileApp />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

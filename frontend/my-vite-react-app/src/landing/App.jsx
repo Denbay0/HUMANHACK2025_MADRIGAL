@@ -8,7 +8,7 @@ import people from './assets/lol.svg';
 function App() {
   const elementsRef = useRef([]);
   const [visibleElements, setVisibleElements] = useState({});
-  const navigate = useNavigate(); // добавили навигатор для маршрутизации
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -67,7 +67,7 @@ function App() {
           ref={el => elementsRef.current[2] = el}
           className='log'
           style={getAnimatedStyle(2)}
-          onClick={() => navigate('/login')} // переход на страницу логина
+          onClick={() => navigate('/login')}
         >
           зарегистрироваться / войти
         </button>
