@@ -2,7 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Подключение к базе servers.db (для SSH/FTP/SFTP/RDP)
 SQLALCHEMY_SERVERS_DB_URL = "sqlite:///backend/servers.db"
 
 engineServers = create_engine(
