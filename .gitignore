@@ -10,3 +10,5 @@ backend/connections/all_types_connection/ssh_type/__pycache__
 backend/connections/all_types_connection/ftp_type/__pycache__
 backend/connections/all_types_connection/sftp_type/__pycache__
 frontend/node_modules
+backend/user.db
+backend/servers.db
