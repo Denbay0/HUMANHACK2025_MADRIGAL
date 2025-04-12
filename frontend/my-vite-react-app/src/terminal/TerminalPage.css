@@ -1,0 +1,61 @@
+.terminal-page {
+    background: #2E2644;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .connection-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #1E172F;
+    padding: 20px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .connection-form-container h2 {
+    margin-bottom: 15px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .connection-form-container button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background: #4285f4;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .connection-form-container button:hover {
+    background: #3367d6;
+  }
+  
+  .terminal-container {
+    margin-top: 20px;
+    height: 80vh;
+    background: #1E172F;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  

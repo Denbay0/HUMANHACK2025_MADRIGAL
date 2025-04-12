@@ -1,3 +1,4 @@
+// App_terminal.jsx
 import React, { useState, useEffect } from 'react';
 import './App_ssh.css';
 
@@ -13,6 +14,8 @@ const ConnectionTabs = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Если у вас есть рабочий API, раскомментируйте код ниже и замените URL.
+    /*
     const fetchServerData = async () => {
       try {
         const response = await fetch('https://api.example.com/servers');
@@ -30,9 +33,31 @@ const ConnectionTabs = () => {
         setError(error.message);
       }
     };
-
     fetchServerData();
+    */
+    
+    // Заглушка (dummy data) для тестирования:
+    setTimeout(() => {
+      const dummyServer = {
+        id: 1,
+        name: "Test Server",
+        ip: "192.168.1.100",
+        user: "testuser"
+      };
+      setServer(dummyServer);
+    }, 1000);
   }, []);
+
+  useEffect(() => {
+    if (server) {
+      setSshCommand(`ssh ${server.user}@${server.ip}`);
+      setRdpFile({
+        ip: server.ip,
+        port: 3389,
+        username: server.user,
+      });
+    }
+  }, [server]);
 
   if (error) {
     return <div className="error">Ошибка: {error}</div>;
@@ -66,17 +91,6 @@ const ConnectionTabs = () => {
     a.download = `${server.name}.rdp`;
     a.click();
   };
-
-  useEffect(() => {
-    if (server) {
-      setSshCommand(`ssh ${server.user}@${server.ip}`);
-      setRdpFile({
-        ip: server.ip,
-        port: 3389,
-        username: server.user,
-      });
-    }
-  }, [server]);
 
   return (
     <main className="body">

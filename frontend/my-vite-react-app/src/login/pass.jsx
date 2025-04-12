@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './password.css';
 
 function AuthPage() {
-
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -32,6 +31,11 @@ function AuthPage() {
         }
       } else {
         localStorage.setItem("token", data.access_token);
+        if (data.user_id) {
+          localStorage.setItem("userId", data.user_id);
+        } else {
+          console.warn("User ID не получен от сервера");
+        }
         window.location.href = "/profile";
       }
     } catch (err) {
@@ -69,7 +73,6 @@ function AuthPage() {
 
   return (
     <div className="main">
-      {/* Переключатель между формами */}
       <input
         type="checkbox"
         id="chk"
@@ -77,8 +80,6 @@ function AuthPage() {
         checked={!isLogin}
         onChange={toggleForm}
       />
-
-      {/* Форма регистрации */}
       <div className="signup">
         <form onSubmit={handleRegister}>
           <label htmlFor="chk" aria-hidden="true">Регистрация</label>
@@ -101,8 +102,6 @@ function AuthPage() {
           <button type="submit">Зарегистрироваться</button>
         </form>
       </div>
-
-      {/* Форма логина */}
       <div className="login">
         <form onSubmit={handleLogin}>
           <label htmlFor="chk" aria-hidden="true">Вход</label>
@@ -124,7 +123,6 @@ function AuthPage() {
           />
           <button type="submit">Вход</button>
         </form>
-        {/* Вывод ошибки */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>

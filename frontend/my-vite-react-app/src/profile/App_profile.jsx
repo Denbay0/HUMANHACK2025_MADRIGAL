@@ -1,10 +1,18 @@
-// Файл: App_profile.jsx
 import React, { useState, useEffect } from "react";
 import './App_prof.css';
 
-// Модальное окно редактирования профиля, включая смену пароля
+const getUserIdFromLocalStorage = () => {
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    console.log("User ID found in localStorage:", userId);
+    return parseInt(userId, 10);
+  } else {
+    console.error("User ID not found in localStorage");
+    return null;
+  }
+};
+
 function EditProfileModal({ user, onClose, onSave, onDelete }) {
-  // Форма редактирования профиля без поля photo
   const initialFormState = {
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -49,7 +57,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
     }
 
     try {
-      // Для примера я изменил URL-адреса на локальные. Реализуйте соответствующие эндпоинты в вашем FastAPI.
       const checkResponse = await fetch('http://localhost:8000/auth/check-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,7 +101,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
     setFormData(initialFormState);
   };
 
-  // Переключение между вкладками редактирования профиля и смены пароля
   const handleChangeTab = () => {
     setIsPasswordTab(prev => !prev);
   };
@@ -120,7 +126,7 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
             Сменить пароль
           </button>
           <button onClick={handleChangeTab} className={!isPasswordTab ? "active" : ""}>
-            Редактировать профиль
+            Создать новый сервер
           </button>
         </div>
 
@@ -219,7 +225,6 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
   );
 }
 
-// Компонент профиля пользователя и список серверов
 function Profile({ user, servers, isLoading, onEditProfile }) {
   return (
     <div className="profile">
@@ -232,7 +237,7 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
           <div className="servers-container">
             <div className="profile-actions">
               <button className="edit-profile-btn" onClick={onEditProfile}>
-                Редактировать профиль
+                Создать новый сервер
               </button>
             </div>
             <h3 className="servers-title">Мои серверы</h3>
@@ -242,10 +247,18 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
                   <div key={server.id} className={`server-card ${server.isActive ? 'online' : 'offline'}`}>
                     <h4 className="server-name">{server.name}</h4>
                     <div className="server-specs">
-                      <div className="spec-item"><span className="spec-label">CPU:</span> {server.cpu}</div>
-                      <div className="spec-item"><span className="spec-label">RAM:</span> {server.ram}</div>
-                      <div className="spec-item"><span className="spec-label">Storage:</span> {server.storage}</div>
-                      <div className="spec-item"><span className="spec-label">Price:</span> {server.price}</div>
+                      <div className="spec-item">
+                        <span className="spec-label">CPU:</span> {server.cpu}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">RAM:</span> {server.ram}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">Storage:</span> {server.storage}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">Price:</span> {server.price}
+                      </div>
                     </div>
                     <div className={`server-status ${server.isActive ? 'online' : 'offline'}`}>
                       {server.isActive ? '🟢 Online' : '🔴 Offline'}
@@ -263,10 +276,12 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
   );
 }
 
-// Главный компонент профиля
 function App() {
+  const initialUserId = getUserIdFromLocalStorage();
+  console.log("Initial user id from localStorage:", initialUserId);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({
+    id: initialUserId,
     firstName: "Влад",
     lastName: "Афонин",
     email: "afonin@example.com",
@@ -276,49 +291,33 @@ function App() {
   const [servers, setServers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  const mockServersData = [
-    {
-      id: 1,
-      name: "Игровой сервер",
-      cpu: "4 vCPU",
-      ram: "16 GB RAM",
-      storage: "320 GB SSD",
-      price: "$99 / mo (≈ 7500 руб)",
-      isActive: true
-    },
-    {
-      id: 2,
-      name: "Веб-хостинг",
-      cpu: "2 vCPU",
-      ram: "8 GB RAM",
-      storage: "160 GB SSD",
-      price: "$49 / mo (≈ 3700 руб)",
-      isActive: false
-    },
-    {
-      id: 3,
-      name: "База данных",
-      cpu: "8 vCPU",
-      ram: "32 GB RAM",
-      storage: "640 GB SSD",
-      price: "$199 / mo (≈ 15000 руб)",
-      isActive: true
-    }
-  ];
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchServers = async () => {
       try {
-        // Имитация загрузки данных, замените на реальный fetch при необходимости
-        setServers(mockServersData);
+        console.log("Fetching servers for user id:", user.id);
+        const jwt = localStorage.getItem("token");
+        const response = await fetch(`http://localhost:8000/users/${user.id}/servers?jwt_token=${encodeURIComponent(jwt)}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Servers data received:", data);
+          const allServers = Object.values(data).flat();
+          setServers(allServers);
+        } else {
+          console.error("Ошибка загрузки серверов, статус", response.status);
+        }
       } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
+        console.error("Ошибка загрузки серверов:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchData();
-  }, []);
+
+    if (user && user.id) {
+      fetchServers();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user.id]);
 
   const handleEditProfile = () => {
     setIsEditing(true);
@@ -326,7 +325,6 @@ function App() {
 
   const handleSaveProfile = async (updatedUser) => {
     try {
-      // Здесь может быть реальный fetch для сохранения профиля
       setUser(updatedUser);
       setIsEditing(false);
       alert("Изменения сохранены!");
@@ -339,6 +337,7 @@ function App() {
   const handleDeleteProfile = () => {
     if (window.confirm("Вы уверены, что хотите удалить профиль?")) {
       setUser({
+        id: null,
         firstName: "",
         lastName: "",
         email: "",
