@@ -4,7 +4,6 @@ import threading
 
 from connections.all_types_connection.base.base_connections import BaseConnection
 
-
 class SSHConnection(BaseConnection):
     def __init__(self, hostname, port=22, username=None, password=None, key_filename=None, timeout=10):
         super().__init__(hostname, port, username, password, key_filename, timeout)
@@ -12,6 +11,9 @@ class SSHConnection(BaseConnection):
         self.lock = threading.Lock()
 
     def connect(self):
+        # Если значение key_filename равно "string" (или пустое), используем None
+        key_file = self.key_filename if self.key_filename and self.key_filename != "string" else None
+
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
@@ -20,7 +22,7 @@ class SSHConnection(BaseConnection):
                 port=self.port,
                 username=self.username,
                 password=self.password,
-                key_filename=self.key_filename,
+                key_filename=key_file,
                 timeout=self.timeout
             )
             logging.info(f"[SSH] Подключение установлено к {self.hostname}:{self.port}")
