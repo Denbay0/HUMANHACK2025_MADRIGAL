@@ -46,6 +46,13 @@ def get_current_user(
     Извлекает пользователя из токена (ожидается, что поле 'sub' содержит id пользователя).
     Токен передается стандартно через заголовок Authorization (Bearer).
     """
+def get_user_from_token(token: str, db: Session) -> User:
+    print("Полученный токен:", token)
+    
+    if token.startswith("Bearer "):
+        token = token[7:]
+    print("Токен после удаления Bearer:", token)
+    
     payload = decode_access_token(token)
     user_id = payload.get("sub")
     if user_id is None:

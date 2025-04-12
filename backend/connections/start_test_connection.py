@@ -12,13 +12,16 @@ def main():
     print("1. SSH")
     print("2. FTP")
     print("3. SFTP")
-    choice = input("Введите номер (1/2/3): ").strip()
+    print("4. RDP")
+    choice = input("Введите номер (1/2/3/4): ").strip()
     if choice == "1":
         conn_type = "ssh"
     elif choice == "2":
         conn_type = "ftp"
     elif choice == "3":
         conn_type = "sftp"
+    elif choice == "4":
+        conn_type = "rdp"
     else:
         print("Неверный выбор")
         return
@@ -28,8 +31,12 @@ def main():
     if port_str.strip():
         port = int(port_str)
     else:
-        # По умолчанию SSH и SFTP: 22, FTP: 21
-        port = 22 if conn_type in ["ssh", "sftp"] else 21
+        if conn_type in ["ssh", "sftp"]:
+            port = 22
+        elif conn_type == "ftp":
+            port = 21
+        elif conn_type == "rdp":
+            port = 3389
 
     username = input("Введите логин: ")
     password = getpass.getpass("Введите пароль: ")
@@ -41,21 +48,25 @@ def main():
         print(f"Ошибка при создании сессии: {e}")
         return
 
-    print("Введите команду для выполнения (например, для FTP: LIST; для SFTP: ls /):")
-    print("Введите 'exit' для завершения работы с сессией.")
-    while True:
-        command = input("Команда: ")
-        if command.strip().lower() == "exit":
-            break
-        try:
-            stdout, stderr = manager.execute_command(session_id, command)
-            print("=== STDOUT ===")
-            print(stdout)
-            if stderr:
-                print("=== STDERR ===")
-                print(stderr)
-        except Exception as e:
-            print(f"Ошибка выполнения команды: {e}")
+    if conn_type.lower() == "rdp":
+        print("RDP-сессии не поддерживают выполнение команд через консоль теста.")
+        input("Нажмите Enter для завершения сессии...")
+    else:
+        print("Введите команду для выполнения (например, для FTP: LIST; для SFTP: ls /):")
+        print("Введите 'exit' для завершения работы с сессией.")
+        while True:
+            command = input("Команда: ")
+            if command.strip().lower() == "exit":
+                break
+            try:
+                stdout, stderr = manager.execute_command(session_id, command)
+                print("=== STDOUT ===")
+                print(stdout)
+                if stderr:
+                    print("=== STDERR ===")
+                    print(stderr)
+            except Exception as e:
+                print(f"Ошибка выполнения команды: {e}")
     
     try:
         manager.close_session(session_id)

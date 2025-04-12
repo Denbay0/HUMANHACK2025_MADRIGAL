@@ -3,9 +3,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
-# Сессия для работы с серверной базой (servers.db)
 from backend.database.session_servers import get_servers_db
-# Сессия для работы с базой пользователей (user.db)
 from backend.database.session import get_db as get_users_db
 
 from backend.database.models_servers import SSHServer

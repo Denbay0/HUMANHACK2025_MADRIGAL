@@ -3,7 +3,7 @@ import uuid
 from connections.all_types_connection.ssh_type.ssh_connection import SSHConnection
 from connections.all_types_connection.ftp_type.ftp_connection import FTPConnection
 from connections.all_types_connection.sftp_type.sftp_connection import SFTPConnection
-# from connections.all_types_connection.rdp_type.rdp_connection import RDPConnection
+from connections.all_types_connection.rdp_type.rdp_connection import RDPConnection
 
 class SessionManager:
     """
@@ -21,8 +21,8 @@ class SessionManager:
             connection_class = FTPConnection
         elif conn_type.lower() == 'sftp':
             connection_class = SFTPConnection
-        # elif conn_type.lower() == 'rdp':
-        #     connection_class = RDPConnection
+        elif conn_type.lower() == 'rdp':
+            connection_class = RDPConnection
         else:
             raise Exception(f"Неподдерживаемый тип подключения: {conn_type}")
 

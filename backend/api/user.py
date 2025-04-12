@@ -96,7 +96,6 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    
     if user.username != user_data.username:
         if db.query(User).filter(User.username == user_data.username).first():
             raise HTTPException(
