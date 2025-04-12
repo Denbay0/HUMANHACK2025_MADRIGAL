@@ -9,7 +9,7 @@ from backend.database import models_servers
 
 from backend.api import auth, user, ssh, ftp, sftp, rdp
 
-from backend.api.connections import ssh_connection_endpoint, ftp_connection_endpoint, sftp_connection_endpoint
+from backend.api.connections import ssh_connection_endpoint, ftp_connection_endpoint, sftp_connection_endpoint, rdp_connection_endpoint
 
 app = FastAPI(title="MyApp with Users & Servers", version="0.1.0")
 
@@ -31,6 +31,7 @@ app.include_router(ftp.router_ftp)
 app.include_router(sftp.router_sftp)
 app.include_router(rdp.router_rdp)
 
+app.include_router(rdp_connection_endpoint.router)
 app.include_router(ssh_connection_endpoint.router)
 app.include_router(ftp_connection_endpoint.router)
 app.include_router(sftp_connection_endpoint.router)
