@@ -11,7 +11,6 @@ class SSHConnection(BaseConnection):
         self.lock = threading.Lock()
 
     def connect(self):
-        # Если значение key_filename равно "string" (или пустое), используем None
         key_file = self.key_filename if self.key_filename and self.key_filename != "string" else None
 
         self.client = paramiko.SSHClient()

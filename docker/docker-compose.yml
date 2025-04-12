@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  myapp:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ../backend:/app/backend

@@ -4,7 +4,6 @@ from connections.all_types_connection.base.base_connections import BaseConnectio
 
 class FTPConnection(BaseConnection):
     def __init__(self, hostname, port=21, username=None, password=None, key_filename=None, timeout=10):
-        # Для FTP порт по умолчанию 21
         super().__init__(hostname, port, username, password, key_filename, timeout)
         self.ftp = None
 

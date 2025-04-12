@@ -1,6 +1,5 @@
 import uuid
 
-# Импортируем классы из ваших модулей
 from connections.all_types_connection.ssh_type.ssh_connection import SSHConnection
 from connections.all_types_connection.ftp_type.ftp_connection import FTPConnection
 from connections.all_types_connection.sftp_type.sftp_connection import SFTPConnection
