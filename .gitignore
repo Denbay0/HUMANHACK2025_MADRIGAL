@@ -6,3 +6,5 @@ backend/connections/__pycache__
 backend/connections/all_types_connection/__pycache__
 backend/connections/all_types_connection/base/__pycache__
 backend/connections/all_types_connection/ssh_type/__pycache__
+backend/connections/all_types_connection/ftp_type/__pycache__
+backend/connections/all_types_connection/sftp_type/__pycache__
