@@ -1,14 +1,13 @@
 import re
 from typing import List, Optional, Dict
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel, validator
 from sqlalchemy.orm import Session
 
 from backend.database.models import User
 from backend.database.session import get_db
-from backend.security import get_password_hash, get_current_user
-# Дополнительно импортируем сессию для серверов и модели серверов:
+from backend.security import get_password_hash, get_user_from_token  # get_user_from_token позволяет передавать токен как параметр
 from backend.database.session_servers import get_servers_db
 from backend.database.models_servers import SSHServer, FTPServer, SFTPServer, RDPServer
 
@@ -19,7 +18,6 @@ USERNAME_PASSWORD_REGEX = re.compile(r"^[a-zA-Z0-9_]{4,15}$")
 class UserRead(BaseModel):
     id: int
     username: str
-    # Если вы хотите убрать поле photo, удалите его из модели:
     photo: Optional[str]
 
     class Config:
@@ -55,30 +53,28 @@ def get_all_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
+# Новый эндпоинт для получения серверов по id пользователя, при этом JWT-токен передается как query-параметр.
 @router.get("/{user_id}/servers", response_model=Dict[str, List[dict]])
 def get_servers_for_user(
     user_id: int,
-    current_user: User = Depends(get_current_user),
-    db_servers: Session = Depends(get_servers_db)
+    jwt_token: str = Query(..., description="JWT token", example="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."),
+    db_servers: Session = Depends(get_servers_db),
+    user_db: Session = Depends(get_db)
 ):
-    """
-    Возвращает все серверы (SSH, FTP, SFTP, RDP) для заданного пользователя.
-    Допускается только запрос, если идентификатор из токена совпадает с переданным.
-    """
+    # Получаем текущего пользователя из jwt-токена
+    current_user = get_user_from_token(jwt_token, user_db)
     if current_user.id != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to view servers for this user"
         )
-
-    # Получаем серверы по типам с фильтром по owner_id
+    # Получаем серверы по типам с фильтром по owner_id:
     ssh_servers = db_servers.query(SSHServer).filter(SSHServer.owner_id == user_id).all()
     ftp_servers = db_servers.query(FTPServer).filter(FTPServer.owner_id == user_id).all()
     sftp_servers = db_servers.query(SFTPServer).filter(SFTPServer.owner_id == user_id).all()
     rdp_servers = db_servers.query(RDPServer).filter(RDPServer.owner_id == user_id).all()
 
     def serialize_server(server) -> dict:
-        # Преобразуем SQLAlchemy объект в словарь, беря все колонки
         return {col.name: getattr(server, col.name) for col in server.__table__.columns}
 
     return {
@@ -100,8 +96,7 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-
-    # Если новое имя отличается, проверяем его уникальность
+    
     if user.username != user_data.username:
         if db.query(User).filter(User.username == user_data.username).first():
             raise HTTPException(
@@ -110,10 +105,7 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
             )
         user.username = user_data.username
 
-    # Обновляем поле photo, если оно остаётся (удалите или закомментируйте, если поле не нужно)
     user.photo = user_data.photo
-
-    # Если указан новый пароль — хешируем его
     if user_data.password is not None:
         user.password_hash = get_password_hash(user_data.password)
 
