@@ -1,23 +1,18 @@
-// Файл: pass.jsx
 import React, { useState } from 'react';
 import './password.css';
 
 function AuthPage() {
-  // Флаг: true – логин, false – регистрация
+
   const [isLogin, setIsLogin] = useState(true);
-  // Поля формы
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // Сообщение об ошибке (обязательно строка)
   const [error, setError] = useState('');
 
-  // Переключение между формами логина и регистрации
   const toggleForm = () => {
     setError('');
     setIsLogin(!isLogin);
   };
 
-  // Обработчик логина
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -28,7 +23,6 @@ function AuthPage() {
       });
       const data = await response.json();
       if (!response.ok) {
-        // Если detail – массив, берем первый элемент msg, иначе преобразуем объект в строку
         if (data.detail && Array.isArray(data.detail) && data.detail.length) {
           setError(data.detail[0].msg);
         } else if (typeof data.detail === 'string') {
@@ -38,7 +32,7 @@ function AuthPage() {
         }
       } else {
         localStorage.setItem("token", data.access_token);
-        window.location.href = "/";
+        window.location.href = "/profile";
       }
     } catch (err) {
       console.error("Ошибка при логине:", err);
@@ -46,18 +40,16 @@ function AuthPage() {
     }
   };
 
-  // Обработчик регистрации
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch("http://localhost:8000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, photo: null }),
+        body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
       if (!response.ok) {
-        // Аналогичная обработка ошибок, как и в логине
         if (data.detail && Array.isArray(data.detail) && data.detail.length) {
           setError(data.detail[0].msg);
         } else if (typeof data.detail === 'string') {
@@ -66,7 +58,6 @@ function AuthPage() {
           setError(JSON.stringify(data));
         }
       } else {
-        // После успешной регистрации переключаемся на форму логина
         setIsLogin(true);
         setError('');
       }
@@ -90,11 +81,11 @@ function AuthPage() {
       {/* Форма регистрации */}
       <div className="signup">
         <form onSubmit={handleRegister}>
-          <label htmlFor="chk" aria-hidden="true">Sign up</label>
+          <label htmlFor="chk" aria-hidden="true">Регистрация</label>
           <input
             type="text"
             name="username"
-            placeholder="User name"
+            placeholder="Имя пользователя"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -102,23 +93,23 @@ function AuthPage() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Пароль"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign up</button>
+          <button type="submit">Зарегистрироваться</button>
         </form>
       </div>
 
       {/* Форма логина */}
       <div className="login">
         <form onSubmit={handleLogin}>
-          <label htmlFor="chk" aria-hidden="true">Login</label>
+          <label htmlFor="chk" aria-hidden="true">Вход</label>
           <input
             type="text"
             name="username"
-            placeholder="User name"
+            placeholder="Имя пользователя"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -126,14 +117,14 @@ function AuthPage() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Пароль"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <button type="submit">Вход</button>
         </form>
-        {/* Вывод сообщения об ошибке (всегда строка) */}
+        {/* Вывод ошибки */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>

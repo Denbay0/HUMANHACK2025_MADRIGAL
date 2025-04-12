@@ -4,13 +4,12 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0;
-  padding: 20px; /* Добавляем отступы от краёв экрана */
-  box-sizing: border-box; /* Чтобы padding не увеличивал размеры */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .container {
   position: relative; 
- 
   width: 1460px;
   margin: 0 auto; 
 }
@@ -18,340 +17,358 @@ body {
 .cub {
   background: #1E172F;
   border-radius: 100px;
-
   width: 1460px;
-  height:3220px
+  height: 3220px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
-.name{
-position: absolute;
-width: 339px;
-height: 78px;
-left: 96px;
-top: 115px;
 
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 400;
-font-size: 64px;
-line-height: 78px;
-
-color: #FFFFFF;
+.cub2 {
+  position: absolute;
+  width: 1484px;
+  height: 303px;
+  left: 35px;
+  top: 3355px;
+  background: #1E172F;
+  border-radius: 100px;
+  z-index: 0;
 }
-.log{
-/* Rectangle 133 */
 
-box-sizing: border-box;
+/* Контентные элементы – располагаются поверх фона */
+.name {
+  position: absolute;
+  width: 339px;
+  height: 78px;
+  left: 96px;
+  top: 115px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 78px;
+  color: #FFFFFF;
+  z-index: 2;
+}
 
-position: absolute;
-width: 441px;
-height: 55px;
-left: 1000px;
-top: 170px;
-background-color: transparent;
-border: 3px solid #4A3961;
-border-radius: 15px;
-
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-display: flex;
+.log {
+  box-sizing: border-box;
+  position: absolute;
+  width: 441px;
+  height: 55px;
+  left: 1000px;
+  top: 145px;
+  background-color: transparent;
+  border: 3px solid #4A3961;
+  border-radius: 15px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  display: flex;
   align-items: center;   
   justify-content: center;
-
-color: #FFFFFF;
+  color: #FFFFFF;
   white-space: nowrap;
+  z-index: 2;
 }
-.line{
-position: absolute;
-width: 1460px;
-height: 0px;
-top: 300px;
-border: 5px solid #2E2644;
+
+.line {
+  position: absolute;
+  width: 1460px;
+  height: 0px;
+  top: 300px;
+  border: 5px solid #2E2644;
+  z-index: 1;
 }
-.time{
 
-
-position: absolute;
-width: 540px;
-height: 39px;
-left: 96px;
-top: 363px;
-
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 32px;
-line-height: 39px;
-color: #FFFFFF;
+.time {
+  position: absolute;
+  width: 540px;
+  height: 39px;
+  left: 96px;
+  top: 363px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 39px;
+  color: #FFFFFF;
+  z-index: 2;
 }
-.uwu{
-position: absolute;
-width: 867px;
-height: 465px;
-left: 96px;
-top: 422px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-color: #FFFFFF;
+
+.uwu {
+  position: absolute;
+  width: 867px;
+  height: 465px;
+  left: 96px;
+  top: 422px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
 }
-.setu{
-position: absolute;
-width: 433px;
-height: 387px;
-left: 1006px;
-top: 422px;
+
+.setu {
+  position: absolute;
+  width: 433px;
+  height: 387px;
+  left: 1006px;
+  top: 422px;
+  z-index: 2;
 }
-.tex{
-/* Надежная техническая поддержка */
 
-position: absolute;
-width: 622px;
-height: 39px;
-left: 777px;
-top: 926px;
-
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 32px;
-line-height: 39px;
-/* identical to box height */
-
-color: #FFFFFF;
-
-
+.tex {
+  position: absolute;
+  width: 622px;
+  height: 39px;
+  left: 777px;
+  top: 926px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 39px;
+  color: #FFFFFF;
+  z-index: 2;
 }
-.xz{
 
-
-position: absolute;
-width: 856px;
-height: 713px;
-left: 543px;
-top: 985px;
-
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-text-align: right;
-
-color: #FFFFFF;
-
-
+.xz {
+  position: absolute;
+  width: 856px;
+  height: 713px;
+  left: 543px;
+  top: 985px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: right;
+  color: #FFFFFF;
+  z-index: 2;
 }
-.foto{
-/* pngwing.com (6) 1 */
 
-position: absolute;
-width: 411px;
-height: 386px;
-left: 96px;
-top: 1018px;
+.foto {
+  position: absolute;
+  width: 411px;
+  height: 386px;
+  left: 96px;
+  top: 1018px;
+  z-index: 2;
 }
-.line2{
-position: absolute;
-width: 1460px;
-height: 0px;
-top: 1685px;
-border: 5px solid #2E2644;
-}
-.kak{
-position: absolute;
-width: 579px;
-height: 39px;
-left: 448px;
-top: 1713px;
 
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 32px;
-line-height: 39px;
-white-space: nowrap;
-color: #FFFFFF;
+.line2 {
+  position: absolute;
+  width: 1460px;
+  height: 0px;
+  top: 1685px;
+  border: 5px solid #2E2644;
+  z-index: 1;
 }
-.arenda{
 
-position: absolute;
-width: 1403px;
-height: 83px;
-left: 30px;
-top: 1779px;
+.kak {
+  position: absolute;
+  width: 579px;
+  height: 39px;
+  left: 448px;
+  top: 1713px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 39px;
+  white-space: nowrap;
+  color: #FFFFFF;
+  z-index: 2;
+}
 
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-text-align: center;
+.arenda {
+  position: absolute;
+  width: 1403px;
+  height: 83px;
+  left: 30px;
+  top: 1779px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
+  color: #FFFFFF;
+  z-index: 2;
+}
 
-color: #FFFFFF;
+.line3 {
+  position: absolute;
+  width: 1460px;
+  height: 0px;
+  top: 1887px;
+  border: 5px solid #2E2644;
+  z-index: 1;
 }
-.line3{
-position: absolute;
-width: 1460px;
-height: 0px;
-top: 1887px;
-border: 5px solid #2E2644;
-}
-.one{
-position: absolute;
-width: 658px;
-height: 332px;
-left: 98px;
-top: 2016px;
 
-background: #2E2644;
-border-radius: 50px;
+.one {
+  position: absolute;
+  width: 658px;
+  height: 332px;
+  left: 98px;
+  top: 2016px;
+  background: #2E2644;
+  border-radius: 50px;
+  z-index: 2;
 }
-.te{
 
-position: absolute;
-width: 607px;
-height: 280px;
-left: 125px;
-top: 2039px;
+.te {
+  position: absolute;
+  width: 607px;
+  height: 280px;
+  left: 125px;
+  top: 2039px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
+}
 
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
+.two {
+  position: absolute;
+  width: 658px;
+  height: 404px;
+  left: 793px;
+  top: 2005px;
+  background: #2E2644;
+  border-radius: 50px;
+  z-index: 2;
+}
 
-color: #FFFFFF;
+.z {
+  position: absolute;
+  width: 607px;
+  height: 296px;
+  left: 821px;
+  top: 2026px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
 }
-.two{
-position: absolute;
-width: 658px;
-height: 404px;
-left: 793px;
-top: 2005px;
 
-background: #2E2644;
-border-radius: 50px;
+.covet {
+  position: absolute;
+  width: 629px;
+  height: 30px;
+  left: 822px;
+  top: 2338px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #BFB7D3;
+  z-index: 2;
 }
-.z{
-position: absolute;
-width: 607px;
-height: 296px;
-left: 821px;
-top: 2026px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-color: #FFFFFF;
-}
-.covet{
-position: absolute;
-width: 629px;
-height: 30px;
-left: 822px;
-top: 2338px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
-line-height: 20px;
-color: #BFB7D3;
-}
-.three{
-position: absolute;
-width: 660px;
-height: 346px;
-left: 96px;
-top: 2409px;
-background: #2E2644;
-border-radius: 50px;
-}
-.oformite{
-position: absolute;
-width: 608px;
-height: 296px;
-left: 122px;
-top: 2430px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-color: #FFFFFF;
-}
-.doctyn{
-position: absolute;
-width: 648px;
-height: 288px;
-left: 793px;
-top: 2467px;
-background: #2E2644;
-border-radius: 50px;
-}
-.server{
-position: absolute;
-width: 597px;
-height: 230px;
-left: 821px;
-top: 2477px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-color: #FFFFFF;
-}
-.four{
-position: absolute;
-width: 632px;
-height: 269px;
-left: 461px;
-top: 2783px;
 
-background: #2E2644;
-border-radius: 50px;
+.three {
+  position: absolute;
+  width: 660px;
+  height: 346px;
+  left: 96px;
+  top: 2409px;
+  background: #2E2644;
+  border-radius: 50px;
+  z-index: 2;
 }
-.work{
-position: absolute;
-width: 582px;
-height: 226px;
-left: 489px;
-top: 2785px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
-color: #FFFFFF;
+
+.oformite {
+  position: absolute;
+  width: 608px;
+  height: 296px;
+  left: 122px;
+  top: 2430px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
 }
-.cub2{
-position: absolute;
-width: 1484px;
-height: 303px;
-left: 35px;
-top: 3355px;
 
-background: #1E172F;
-border-radius: 100px;
+.doctyn {
+  position: absolute;
+  width: 648px;
+  height: 288px;
+  left: 793px;
+  top: 2467px;
+  background: #2E2644;
+  border-radius: 50px;
+  z-index: 2;
 }
-.cved{
-position: absolute;
-width: 622px;
-height: 31px;
-left: 466px;
-top: 3389px;
-font-family: 'Montserrat Alternates';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 29px;
 
-color: #FFFFFF;
+.server {
+  position: absolute;
+  width: 597px;
+  height: 230px;
+  left: 821px;
+  top: 2477px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
+}
 
+.four {
+  position: absolute;
+  width: 632px;
+  height: 269px;
+  left: 461px;
+  top: 2783px;
+  background: #2E2644;
+  border-radius: 50px;
+  z-index: 2;
+}
+
+.work {
+  position: absolute;
+  width: 582px;
+  height: 226px;
+  left: 489px;
+  top: 2785px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
+}
+
+.cved {
+  position: absolute;
+  width: 622px;
+  height: 31px;
+  left: 466px;
+  top: 3389px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #FFFFFF;
+  z-index: 2;
 }
