@@ -76,7 +76,7 @@ class RDPConnection:
                 "hostname": self.hostname,
                 "port": str(self.port),
                 "ignore-cert": "true",
-                "security": "rdp"
+                "security": "any"
             },
             "parentIdentifier": "ROOT",
             "attributes": {}
