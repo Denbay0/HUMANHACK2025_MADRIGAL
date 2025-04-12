@@ -8,16 +8,16 @@ function AuthPage() {
   // Поля формы
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // Сообщение об ошибке (обязательно строка)
+  // Сообщение об ошибке (строка)
   const [error, setError] = useState('');
 
-  // Переключение между формами логина и регистрации
+  // Переключение между формами
   const toggleForm = () => {
     setError('');
     setIsLogin(!isLogin);
   };
 
-  // Обработчик логина
+  // Обработчик запроса логина
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -28,7 +28,6 @@ function AuthPage() {
       });
       const data = await response.json();
       if (!response.ok) {
-        // Если detail – массив, берем первый элемент msg, иначе преобразуем объект в строку
         if (data.detail && Array.isArray(data.detail) && data.detail.length) {
           setError(data.detail[0].msg);
         } else if (typeof data.detail === 'string') {
@@ -38,7 +37,7 @@ function AuthPage() {
         }
       } else {
         localStorage.setItem("token", data.access_token);
-        window.location.href = "/";
+        window.location.href = "/profile";
       }
     } catch (err) {
       console.error("Ошибка при логине:", err);
@@ -46,18 +45,18 @@ function AuthPage() {
     }
   };
 
-  // Обработчик регистрации
+  // Обработчик запроса регистрации (без параметра photo)
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch("http://localhost:8000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, photo: null }),
+        // Теперь отправляем только username и password
+        body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
       if (!response.ok) {
-        // Аналогичная обработка ошибок, как и в логине
         if (data.detail && Array.isArray(data.detail) && data.detail.length) {
           setError(data.detail[0].msg);
         } else if (typeof data.detail === 'string') {
@@ -66,7 +65,7 @@ function AuthPage() {
           setError(JSON.stringify(data));
         }
       } else {
-        // После успешной регистрации переключаемся на форму логина
+        // После успешной регистрации переключаем форму на логин
         setIsLogin(true);
         setError('');
       }
@@ -133,7 +132,7 @@ function AuthPage() {
           />
           <button type="submit">Login</button>
         </form>
-        {/* Вывод сообщения об ошибке (всегда строка) */}
+        {/* Вывод ошибки */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>
