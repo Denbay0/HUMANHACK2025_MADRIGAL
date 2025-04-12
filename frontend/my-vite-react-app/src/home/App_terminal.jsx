@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './App_ssh.css';
 
 const ConnectionTabs = () => {
   const [activeTab, setActiveTab] = useState('ssh');
