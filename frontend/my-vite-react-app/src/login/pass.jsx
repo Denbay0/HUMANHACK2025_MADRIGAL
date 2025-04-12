@@ -81,11 +81,11 @@ function AuthPage() {
       {/* Форма регистрации */}
       <div className="signup">
         <form onSubmit={handleRegister}>
-          <label htmlFor="chk" aria-hidden="true">Sign up</label>
+          <label htmlFor="chk" aria-hidden="true">Регистрация</label>
           <input
             type="text"
             name="username"
-            placeholder="User name"
+            placeholder="Имя пользователя"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -93,23 +93,23 @@ function AuthPage() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Пароль"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign up</button>
+          <button type="submit">Зарегистрироваться</button>
         </form>
       </div>
 
       {/* Форма логина */}
       <div className="login">
         <form onSubmit={handleLogin}>
-          <label htmlFor="chk" aria-hidden="true">Login</label>
+          <label htmlFor="chk" aria-hidden="true">Вход</label>
           <input
             type="text"
             name="username"
-            placeholder="User name"
+            placeholder="Имя пользователя"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -117,12 +117,12 @@ function AuthPage() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Пароль"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <button type="submit">Вход</button>
         </form>
         {/* Вывод ошибки */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
