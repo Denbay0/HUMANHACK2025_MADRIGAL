@@ -1,0 +1,311 @@
+body {
+  background-color: #2E2644;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px; /* Добавляем отступы от краёв экрана */
+  box-sizing: border-box; /* Чтобы padding не увеличивал размеры */
+}
+
+.cub {
+  background: #1E172F;
+  border-radius: 100px;
+  width: 100%;
+  height: 3220px; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  width: 1460px;
+  margin: 0 auto;
+  height: 3220px; 
+}
+.name {
+  position: absolute;
+  top: 115px;
+  left: 96px;
+  font-family: 'Montserrat Alternates';
+  font-size: 64px;
+  color: #FFFFFF;
+  z-index: 2; 
+}
+
+.line {
+  position: absolute;
+  top: 236px;
+  width: 100%;
+  border: 5px solid #352D4F;
+  z-index: 2;
+}
+
+.profile {
+  position: relative;
+  z-index: 3; /* Самый верхний слой */
+  padding-top: 300px; /* Отступ от верха */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.users, .mail {
+  font-family: 'Montserrat Alternates';
+  font-size: 40px;
+  color: #FFFFFF;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.servers {
+  margin-top: 50px;
+  color: white;
+  width: 80%;
+}
+/* Стили для списка серверов */
+.servers-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.servers-title {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.servers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.server-card {
+  background: rgba(30, 23, 47, 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.server-card:hover {
+  transform: translateY(-3px);
+}
+
+.server-name {
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.server-specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.spec-item {
+  background: #352D4F;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-label {
+  font-weight: bold;
+  color: #a0a0a0;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.spec-value {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.server-status {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.online {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.offline {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.no-servers {
+  text-align: center;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .server-specs {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .server-card {
+    padding: 15px;
+  }
+}
+.profile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.edit-profile-btn {
+font-family: 'Montserrat Alternates';
+font-style: normal;
+font-weight: 500;
+
+  background: #2E2644;
+border-radius: 35px;
+border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.edit-profile-btn:hover {
+  background: #201b30;
+}
+.edit-profile-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #2E2644;
+  border-radius: 15px;
+  padding: 25px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  color: white;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.user-info {
+  background: #3A3152;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #DDD;
+}
+
+.user-info p {
+  margin: 5px 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #DDD;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #4A3F6B;
+  background: #3A3152;
+  color: white;
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+  background: #2A2342;
+  color: #999;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.save-btn, .reset-btn, .delete-btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.save-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.reset-btn {
+  background: #FF9800;
+  color: white;
+}
+
+.delete-btn {
+  background: #F44336;
+  color: white;
+}
