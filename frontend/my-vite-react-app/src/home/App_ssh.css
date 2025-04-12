@@ -1,0 +1,175 @@
+body {
+  background-color: #2E2644;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.cub {
+  background: #1E172F;
+  border-radius: 100px;
+  width: 100%;
+  height: 3220px; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  width: 1460px;
+  margin: 0 auto;
+  height: 3220px;
+}
+
+.name {
+  position: absolute;
+  top: 115px;
+  left: 96px;
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-size: 64px;
+  color: #FFFFFF;
+  z-index: 2; 
+}
+
+.line {
+  position: absolute;
+  top: 236px;
+  width: 100%;
+  border: 5px solid #352D4F;
+  z-index: 2;
+}
+
+.connection-tabs {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tab-header {
+  display: flex;
+  background-color: #f5f5f5;
+}
+
+.tab-header button {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.3s;
+}
+
+.tab-header button.active {
+  background-color: #4285f4;
+  color: white;
+}
+
+.tab-content {
+  padding: 20px;
+  background-color: white;
+}
+
+.tab-content h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.connection-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #666;
+}
+
+.input-group input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.command-box {
+  display: flex;
+  align-items: center;
+  background-color: #f8f8f8;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.command-box code {
+  flex: 1;
+  font-family: monospace;
+}
+
+.command-box button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4285f4;
+  margin-left: 10px;
+}
+
+.connect-button {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  align-self: flex-start;
+}
+
+.connect-button:hover {
+  background-color: #3367d6;
+}
+
+.hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.ssh-tab { color: #333; }
+.rdp-tab { color: #0b5394; }
+.sftp-tab { color: #6a329f; }
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .name {
+    font-size: 48px;
+  }
+
+  .connection-tabs {
+    width: 100%;
+    max-width: 100%;
+  }
+}
