@@ -17,7 +17,6 @@ USERNAME_PASSWORD_REGEX = re.compile(r"^[a-zA-Z0-9_]{4,15}$")
 class UserRegister(BaseModel):
     username: str
     password: str
-    photo: str = None
 
     @validator("username")
     def validate_username(cls, v):
@@ -52,8 +51,7 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(user_data.password)
     new_user = User(
         username=user_data.username,
-        password_hash=hashed_password,
-        photo=user_data.photo
+        password_hash=hashed_password
     )
     db.add(new_user)
     db.commit()
