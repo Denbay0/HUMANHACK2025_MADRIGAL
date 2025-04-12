@@ -3,10 +3,10 @@ from pydantic import BaseModel
 
 class UserBase(BaseModel):
     username: str
-    photo: Optional[str] = None  # URL или путь к фото; необязательное поле
+    photo: Optional[str] = None
 
 class UserRegister(UserBase):
-    password: str  # в запросе регистрации передаётся сырой пароль, будет захеширован
+    password: str
 
 class UserLogin(BaseModel):
     username: str
@@ -16,4 +16,4 @@ class UserRead(UserBase):
     id: int
 
     class Config:
-        orm_mode = True  # поддержка ORM-модели (SQLAlchemy) для автоматического преобразования
+        orm_mode = True

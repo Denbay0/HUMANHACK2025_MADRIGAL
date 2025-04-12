@@ -41,7 +41,6 @@ class UserUpdate(BaseModel):
 
     @validator("password")
     def validate_password(cls, v):
-        # пароль может быть не указан
         if v is not None and not USERNAME_PASSWORD_REGEX.fullmatch(v):
             raise ValueError(
                 "Password must be 4 to 15 characters long and contain only letters, digits, or underscore (_)."
@@ -66,7 +65,6 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    # Проверка, не занято ли новое имя другим пользователем
     if user.username != user_data.username:
         if db.query(User).filter(User.username == user_data.username).first():
             raise HTTPException(
@@ -75,10 +73,8 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
             )
         user.username = user_data.username
 
-    # Обновляем photo (может быть None)
     user.photo = user_data.photo
 
-    # Если указан новый пароль - хешируем
     if user_data.password is not None:
         user.password_hash = get_password_hash(user_data.password)
 

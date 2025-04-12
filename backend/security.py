@@ -39,15 +39,12 @@ def decode_access_token(token: str) -> dict:
         )
 
 def get_user_from_token(token: str, db: Session) -> User:
-    # Вывод для отладки (уберите этот код на проде)
     print("Полученный токен:", token)
     
-    # Убираем префикс "Bearer " если он есть
     if token.startswith("Bearer "):
         token = token[7:]
     print("Токен после удаления Bearer:", token)
     
-    # Декодируем токен
     payload = decode_access_token(token)
     user_id = payload.get("sub")
     if user_id is None:
