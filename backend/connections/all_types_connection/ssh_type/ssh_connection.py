@@ -1,4 +1,3 @@
-# ssh_connection.py
 import logging
 import paramiko
 import threading

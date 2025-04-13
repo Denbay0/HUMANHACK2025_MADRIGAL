@@ -10,7 +10,7 @@ from backend.database import models_servers
 from backend.api import auth, user
 from backend.api.sessions import ssh, ftp, sftp, rdp
 
-from backend.api.connections import ssh_connection_endpoint, ftp_connection_endpoint, sftp_connection_endpoint, rdp_connection_endpoint
+from backend.api.connections import ssh_connection_endpoint, ftp_connection_endpoint, sftp_connection_endpoint, sftp_upload_endpoint, rdp_connection_endpoint
 
 from connections.web_socket.ws_ssh import router as ws_ssh_router
 
@@ -40,6 +40,7 @@ app.include_router(rdp_connection_endpoint.router)
 app.include_router(ssh_connection_endpoint.router)
 app.include_router(ftp_connection_endpoint.router)
 app.include_router(sftp_connection_endpoint.router)
+app.include_router(sftp_upload_endpoint.router)
 
 app.include_router(ws_ssh_router)
 

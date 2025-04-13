@@ -1,4 +1,3 @@
-# ws_ssh.py
 import asyncio
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from connections.session_manager import session_manager
@@ -16,7 +15,6 @@ async def websocket_ssh(websocket: WebSocket, session_id: str):
     connection = session_manager.sessions[session_id]
     try:
         shell = connection.open_shell()
-        # Отправляем начальное приветствие, чтобы клиент видел, что соединение установлено
         shell.send("\r")
         await websocket.send_text("Подключение установлено...\n")
     except Exception as e:
@@ -29,14 +27,12 @@ async def websocket_ssh(websocket: WebSocket, session_id: str):
     async def read_from_ssh():
         while True:
             try:
-                # Если канал завершён – выходим из цикла
                 if shell.exit_status_ready():
                     break
                 if shell.recv_ready():
                     data = shell.recv(1024)
                     if data:
                         await websocket.send_text(data.decode(errors='replace'))
-                # Небольшая задержка для опроса канала
                 await asyncio.sleep(0.1)
             except Exception as e:
                 await websocket.send_text(f"\nОшибка при чтении: {e}\n")

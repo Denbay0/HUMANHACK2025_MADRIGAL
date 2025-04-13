@@ -67,7 +67,6 @@ def get_user_from_token(token: str, db: Session) -> User:
     Извлекает пользователя, используя токен, переданный в теле запроса или как параметр,
     и удаляет префикс "Bearer " (если есть). Ожидается, что в payload токена содержится поле 'sub'.
     """
-    # Если токен начинается с "Bearer ", удаляем его
     if token.startswith("Bearer "):
         token = token[7:]
     payload = decode_access_token(token)
