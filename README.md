@@ -141,7 +141,7 @@ ServerLink - это комплексное решение для удалённ�
     <td align="center" style="border: 1px solid #555;">
       <img src="defay_1x9/pics_readme/Gitler_Prime.jpg" width="100" height="100" style="border-radius: 50%" alt="avatar"><br />
       <b>Максим Землянский</b><br />
-      <sub><i>Pintester</i></sub>
+      <sub><i>Backend, Pintest</i></sub>
       <hr style="border: 1px solid #555; margin: 10px 0;">
       <div align="left">
       <b>Вклад в проект:</b><br />
@@ -155,4 +155,4 @@ ServerLink - это комплексное решение для удалённ�
   </tr>
 </table>
 
-![alt text](defay_1x9/pics_readme/image.png)
+![alt text](defay_1x9/pics_readme/image.jpg)
