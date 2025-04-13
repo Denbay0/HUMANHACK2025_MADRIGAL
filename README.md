@@ -1,9 +1,8 @@
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
-# HUMANHACK2025
 ## Кейс от компании Madrigal
 
-# Кейс
+
 ### - Центр подключения оболочки и менеджер удалённых файлов
 
 ## Описание проекта
