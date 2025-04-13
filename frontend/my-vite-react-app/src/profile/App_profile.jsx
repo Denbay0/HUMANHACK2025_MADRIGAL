@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import './App_prof.css';
+import { useNavigate } from "react-router-dom";
+import "./App_prof.css";
 
 const getUserIdFromLocalStorage = () => {
   const userId = localStorage.getItem("userId");
@@ -12,13 +13,24 @@ const getUserIdFromLocalStorage = () => {
   }
 };
 
+const getUsernameFromLocalStorage = () => {
+  const username = localStorage.getItem("username");
+  if (username) {
+    console.log("Username found in localStorage:", username);
+    return username;
+  } else {
+    console.error("Username not found in localStorage");
+    return "Unknown";
+  }
+};
+
 function EditProfileModal({ user, onClose, onSave, onDelete }) {
   const initialFormState = {
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     email: user?.email || "",
     username: user?.username || "",
-    timezone: user?.timezone || "UTC+3:00"
+    timezone: user?.timezone || "UTC+3:00",
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -35,12 +47,12 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordData(prev => ({ ...prev, [name]: value }));
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmitProfile = (e) => {
@@ -57,9 +69,9 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
     }
 
     try {
-      const checkResponse = await fetch('http://localhost:8000/auth/check-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const checkResponse = await fetch("http://localhost:8000/auth/check-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: user.username,
           oldPassword: passwordData.oldPassword,
@@ -68,12 +80,12 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
 
       const checkData = await checkResponse.json();
       if (!checkResponse.ok) {
-        throw new Error(checkData.error || 'Не удалось проверить пароль');
+        throw new Error(checkData.error || "Не удалось проверить пароль");
       }
 
-      const updateResponse = await fetch('http://localhost:8000/auth/update-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const updateResponse = await fetch("http://localhost:8000/auth/update-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: user.username,
           newPassword: passwordData.newPassword,
@@ -82,10 +94,10 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
 
       const updateData = await updateResponse.json();
       if (!updateResponse.ok) {
-        throw new Error(updateData.error || 'Не удалось обновить пароль');
+        throw new Error(updateData.error || "Не удалось обновить пароль");
       }
 
-      alert('Пароль успешно изменён');
+      alert("Пароль успешно изменён");
       setPasswordData({
         oldPassword: "",
         newPassword: "",
@@ -102,15 +114,14 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
   };
 
   const handleChangeTab = () => {
-    setIsPasswordTab(prev => !prev);
+    setIsPasswordTab((prev) => !prev);
   };
 
   const timezones = [
-    "UTC-12:00", "UTC-11:00", "UTC-10:00", "UTC-9:00", "UTC-8:00",
-    "UTC-7:00", "UTC-6:00", "UTC-5:00", "UTC-4:00", "UTC-3:00",
-    "UTC-2:00", "UTC-1:00", "UTC±0:00", "UTC+1:00", "UTC+2:00",
-    "UTC+3:00", "UTC+4:00", "UTC+5:00", "UTC+6:00", "UTC+7:00",
-    "UTC+8:00", "UTC+9:00", "UTC+10:00", "UTC+11:00", "UTC+12:00"
+    "UTC-12:00", "UTC-11:00", "UTC-10:00", "UTC-9:00", "UTC-8:00", "UTC-7:00",
+    "UTC-6:00", "UTC-5:00", "UTC-4:00", "UTC-3:00", "UTC-2:00", "UTC-1:00",
+    "UTC±0:00", "UTC+1:00", "UTC+2:00", "UTC+3:00", "UTC+4:00", "UTC+5:00",
+    "UTC+6:00", "UTC+7:00", "UTC+8:00", "UTC+9:00", "UTC+10:00", "UTC+11:00", "UTC+12:00",
   ];
 
   return (
@@ -126,7 +137,7 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
             Сменить пароль
           </button>
           <button onClick={handleChangeTab} className={!isPasswordTab ? "active" : ""}>
-            Создать новый сервер
+            Редактировать профиль
           </button>
         </div>
 
@@ -134,30 +145,15 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
           <form onSubmit={handleSubmitPasswordChange}>
             <div className="form-group">
               <label>Старый пароль:</label>
-              <input
-                type="password"
-                name="oldPassword"
-                value={passwordData.oldPassword}
-                onChange={handlePasswordChange}
-              />
+              <input type="password" name="oldPassword" value={passwordData.oldPassword} onChange={handlePasswordChange} />
             </div>
             <div className="form-group">
               <label>Новый пароль:</label>
-              <input
-                type="password"
-                name="newPassword"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-              />
+              <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} />
             </div>
             <div className="form-group">
               <label>Подтвердите новый пароль:</label>
-              <input
-                type="password"
-                name="confirmNewPassword"
-                value={passwordData.confirmNewPassword}
-                onChange={handlePasswordChange}
-              />
+              <input type="password" name="confirmNewPassword" value={passwordData.confirmNewPassword} onChange={handlePasswordChange} />
             </div>
             <div className="modal-actions">
               <button type="submit" className="save-btn">Сменить пароль</button>
@@ -167,48 +163,21 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
           <form onSubmit={handleSubmitProfile}>
             <div className="form-group">
               <label>Имя:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
             </div>
             <div className="form-group">
               <label>Фамилия:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
             </div>
-            <div className="form-group">
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
+            {/* Email убран */}
             <div className="form-group">
               <label>Логин:</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                disabled
-              />
+              <input type="text" name="username" value={formData.username} disabled />
             </div>
             <div className="form-group">
               <label>Часовой пояс:</label>
-              <select
-                name="timezone"
-                value={formData.timezone}
-                onChange={handleChange}
-              >
-                {timezones.map(tz => (
+              <select name="timezone" value={formData.timezone} onChange={handleChange}>
+                {timezones.map((tz) => (
                   <option key={tz} value={tz}>{tz}</option>
                 ))}
               </select>
@@ -225,43 +194,94 @@ function EditProfileModal({ user, onClose, onSave, onDelete }) {
   );
 }
 
-function Profile({ user, servers, isLoading, onEditProfile }) {
+function Profile({ user, servers, isLoading, onDeleteServer }) {
+  const navigate = useNavigate();
+
+  // Функция подключения к SSH-серверу
+  const connectToServer = async (server) => {
+    try {
+      console.log("Подключение к серверу:", server);
+      const response = await fetch("http://localhost:8000/connections/ssh/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hostname: server.host,
+          port: parseInt(server.port, 10),
+          username: server.username,
+          password: server.password,
+          timeout: 10,
+        }),
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "Ошибка создания SSH-сессии");
+      }
+      const data = await response.json();
+      console.log("SSH-сессия создана, session_id:", data.session_id);
+      window.open(`/terminal/${data.session_id}`, "_blank");
+    } catch (error) {
+      console.error("Ошибка подключения к серверу:", error);
+      alert("Ошибка подключения: " + error.message);
+    }
+  };
+
+  // Функция удаления сервера (для SSH-сервера)
+  const deleteServer = async (server) => {
+    try {
+      const jwt = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:8000/ssh/${server.id}?jwt_token=${encodeURIComponent(jwt)}`,
+        { method: "DELETE" }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.detail || "Ошибка удаления сервера");
+      }
+      alert("Сервер удалён");
+      onDeleteServer(server.id);
+    } catch (error) {
+      alert("Ошибка удаления: " + error.message);
+    }
+  };
+
   return (
     <div className="profile">
       {isLoading ? (
         <p>Загрузка данных...</p>
       ) : (
         <>
-          <h2 className="users">{user.firstName} {user.lastName}</h2>
-          <p className="mail">{user.email}</p>
+          {/* Отображаем username */}
+          <h2 className="users">{user.username}</h2>
           <div className="servers-container">
             <div className="profile-actions">
-              <button className="edit-profile-btn" onClick={onEditProfile}>
-                Создать новый сервер
+              <button className="edit-profile-btn" onClick={() => navigate("/terminal")}>
+                Подключиться к SSH-серверу
+              </button>
+              <button className="edit-profile-btn" onClick={() => navigate("/rdp")}>
+                Подключиться по RDP
               </button>
             </div>
             <h3 className="servers-title">Мои серверы</h3>
             {servers.length > 0 ? (
               <div className="servers-list">
-                {servers.map(server => (
-                  <div key={server.id} className={`server-card ${server.isActive ? 'online' : 'offline'}`}>
-                    <h4 className="server-name">{server.name}</h4>
+                {servers.map((server) => (
+                  <div key={server.id} className="server-card">
+                    <h4 className="server-name">{server.server_name}</h4>
                     <div className="server-specs">
                       <div className="spec-item">
-                        <span className="spec-label">CPU:</span> {server.cpu}
+                        <span className="spec-label">Hostname:</span> {server.host}
                       </div>
                       <div className="spec-item">
-                        <span className="spec-label">RAM:</span> {server.ram}
-                      </div>
-                      <div className="spec-item">
-                        <span className="spec-label">Storage:</span> {server.storage}
-                      </div>
-                      <div className="spec-item">
-                        <span className="spec-label">Price:</span> {server.price}
+                        <span className="spec-label">Username:</span> {server.username}
                       </div>
                     </div>
-                    <div className={`server-status ${server.isActive ? 'online' : 'offline'}`}>
-                      {server.isActive ? '🟢 Online' : '🔴 Offline'}
+                    <div className="server-actions" style={{ display: "flex", gap: "10px" }}>
+                      <button className="edit-profile-btn" onClick={() => connectToServer(server)}>
+                        Подключиться
+                      </button>
+                      <button className="delete-btn" onClick={() => deleteServer(server)}>
+                        Удалить
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -278,15 +298,16 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
 
 function App() {
   const initialUserId = getUserIdFromLocalStorage();
+  const initialUsername = getUsernameFromLocalStorage();
   console.log("Initial user id from localStorage:", initialUserId);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({
     id: initialUserId,
-    firstName: "Влад",
-    lastName: "Афонин",
-    email: "afonin@example.com",
-    username: "afonin.vlad",
-    timezone: "UTC+3:00"
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: initialUsername,
+    timezone: "UTC+3:00",
   });
   const [servers, setServers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -296,7 +317,9 @@ function App() {
       try {
         console.log("Fetching servers for user id:", user.id);
         const jwt = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:8000/users/${user.id}/servers?jwt_token=${encodeURIComponent(jwt)}`);
+        const response = await fetch(
+          `http://localhost:8000/users/${user.id}/servers?jwt_token=${encodeURIComponent(jwt)}`
+        );
         if (response.ok) {
           const data = await response.json();
           console.log("Servers data received:", data);
@@ -342,11 +365,16 @@ function App() {
         lastName: "",
         email: "",
         username: "",
-        timezone: ""
+        timezone: "",
       });
       setIsEditing(false);
       alert("Профиль удалён");
     }
+  };
+
+  // Функция удаления сервера (callback для Profile)
+  const handleDeleteServer = (serverId) => {
+    setServers((prevServers) => prevServers.filter((server) => server.id !== serverId));
   };
 
   return (
@@ -359,7 +387,7 @@ function App() {
           user={user}
           servers={servers}
           isLoading={isLoading}
-          onEditProfile={handleEditProfile}
+          onDeleteServer={handleDeleteServer}
         />
         {isEditing && (
           <EditProfileModal

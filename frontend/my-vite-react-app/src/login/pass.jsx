@@ -30,12 +30,14 @@ function AuthPage() {
           setError(JSON.stringify(data));
         }
       } else {
+        // Сохраняем токен, userId и username в localStorage
         localStorage.setItem("token", data.access_token);
         if (data.user_id) {
           localStorage.setItem("userId", data.user_id);
         } else {
           console.warn("User ID не получен от сервера");
         }
+        localStorage.setItem("username", username);
         window.location.href = "/profile";
       }
     } catch (err) {

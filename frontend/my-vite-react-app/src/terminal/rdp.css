@@ -1,0 +1,66 @@
+/* rdp.css */
+
+.rdp-page {
+    background-color: #2E2644;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .rdp-connection-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #1E172F;
+    padding: 20px;
+    border-radius: 8px;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .rdp-connection-container h2 {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .rdp-form-group {
+    margin-bottom: 15px;
+  }
+  
+  .rdp-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  
+  .rdp-form-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .rdp-connection-container button {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4285F4;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .back-button {
+    margin: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #555;
+    color: #fff;
+    cursor: pointer;
+  }
+  
