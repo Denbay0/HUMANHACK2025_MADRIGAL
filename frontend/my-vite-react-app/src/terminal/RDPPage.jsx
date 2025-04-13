@@ -1,93 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './TerminalPage.css';
+import './rdp.css';
 
-const TerminalPage = () => {
+const RDPPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Необходимо авторизоваться. Пожалуйста, войдите.");
-      navigate('/login');
+      navigate("/login");
     }
   }, [navigate]);
 
+  // Параметры для RDP-подключения
   const [connParams, setConnParams] = useState({
     server_name: '',
     hostname: '',
-    port: 22,
+    port: 3389,
     username: '',
     password: '',
+    domain: ''
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setConnParams((prev) => ({ ...prev, [name]: value }));
+    setConnParams(prev => ({ ...prev, [name]: value }));
   };
 
-  const createSession = async (e) => {
+  const createRDPConnection = async (e) => {
     e.preventDefault();
     try {
-      console.log("Создаем SSH-сессию:", connParams);
-      const sshResp = await fetch('http://localhost:8000/connections/ssh/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          hostname: connParams.hostname,
-          port: parseInt(connParams.port, 10),
-          username: connParams.username,
-          password: connParams.password,
-          timeout: 10,
-        }),
-      });
-      if (!sshResp.ok) {
-        const errData = await sshResp.json();
-        throw new Error(errData.detail || 'Ошибка создания SSH-сессии');
-      }
-      const sshData = await sshResp.json();
-      console.log("SSH-сессия создана, session_id:", sshData.session_id);
-
+      console.log("Создаем RDP-подключение:", connParams);
       const token = localStorage.getItem("token");
-      const saveResp = await fetch('http://localhost:8000/ssh/', {
+      const response = await fetch('http://localhost:8000/rdp-connection/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           jwt_token: token,
           server_name: connParams.server_name,
-          host: connParams.hostname,
+          hostname: connParams.hostname,
           port: parseInt(connParams.port, 10),
           username: connParams.username,
           password: connParams.password,
-          private_key: null,
+          domain: connParams.domain
         }),
       });
-      if (!saveResp.ok) {
-        const saveErr = await saveResp.json();
-        console.error("Ошибка сохранения сервера:", saveErr.detail);
-      } else {
-        console.log("Информация о сервере сохранена");
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "Ошибка создания RDP-подключения");
       }
-
-      // Открываем терминал в новой вкладке
-      window.open(`/terminal/${sshData.session_id}`, '_blank');
+      const data = await response.json();
+      console.log("RDP-подключение создано, join_url:", data.join_url);
+      // Перебрасываем пользователя на полученный URL
+      window.open(data.join_url, "_blank");
     } catch (error) {
-      console.error("Ошибка:", error);
+      console.error("Ошибка RDP-подключения:", error);
       alert("Ошибка: " + error.message);
     }
   };
 
   return (
-    <div className="terminal-page">
-      {/* Кнопка "Назад" с отступом */}
+    <div className="rdp-page">
+      {/* Кнопка "Назад" */}
       <button className="back-button" onClick={() => navigate('/profile')}>
         Назад
       </button>
 
-      <div className="connection-form-container">
-        <h2>Подключиться к серверу</h2>
-        <form onSubmit={createSession}>
-          <div className="form-group">
+      <div className="rdp-connection-container">
+        <h2>Подключиться по RDP</h2>
+        <form onSubmit={createRDPConnection}>
+          <div className="rdp-form-group">
             <label>Server Name:</label>
             <input
               type="text"
@@ -97,7 +80,7 @@ const TerminalPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="rdp-form-group">
             <label>Hostname:</label>
             <input
               type="text"
@@ -107,7 +90,7 @@ const TerminalPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="rdp-form-group">
             <label>Port:</label>
             <input
               type="number"
@@ -117,7 +100,7 @@ const TerminalPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="rdp-form-group">
             <label>Username:</label>
             <input
               type="text"
@@ -127,7 +110,7 @@ const TerminalPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="rdp-form-group">
             <label>Password:</label>
             <input
               type="password"
@@ -137,6 +120,15 @@ const TerminalPage = () => {
               required
             />
           </div>
+          <div className="rdp-form-group">
+            <label>Domain (необязательно):</label>
+            <input
+              type="text"
+              name="domain"
+              value={connParams.domain}
+              onChange={handleInputChange}
+            />
+          </div>
           <button type="submit">Подключиться</button>
         </form>
       </div>
@@ -144,4 +136,4 @@ const TerminalPage = () => {
   );
 };
 
-export default TerminalPage;
+export default RDPPage;

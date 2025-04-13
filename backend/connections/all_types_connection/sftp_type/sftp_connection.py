@@ -18,9 +18,9 @@ class SFTPConnection(BaseConnection):
             self.transport = paramiko.Transport((self.hostname, self.port))
             if key_file:
                 pkey = paramiko.RSAKey.from_private_key_file(key_file)
-                self.transport.connect(username=self.username, pkey=pkey, timeout=self.timeout)
+                self.transport.connect(username=self.username, pkey=pkey)
             else:
-                self.transport.connect(username=self.username, password=self.password, timeout=self.timeout)
+                self.transport.connect(username=self.username, password=self.password)
             self.sftp = paramiko.SFTPClient.from_transport(self.transport)
             logging.info(f"[SFTP] Подключение установлено к {self.hostname}:{self.port}")
         except Exception as e:
@@ -33,3 +33,6 @@ class SFTPConnection(BaseConnection):
         if self.transport:
             self.transport.close()
         logging.info(f"[SFTP] Соединение с {self.hostname}:{self.port} закрыто")
+    
+    def execute_command(self, command):
+        return "SFTP: выполнение команд не поддерживается"

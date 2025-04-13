@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from backend.database.models import User
 from backend.database.session import get_db
-from backend.security import get_password_hash, get_user_from_token  # get_user_from_token позволяет передавать токен как параметр
+from backend.security import get_password_hash, get_user_from_token
 from backend.database.session_servers import get_servers_db
 from backend.database.models_servers import SSHServer, FTPServer, SFTPServer, RDPServer
 
@@ -53,7 +53,6 @@ def get_all_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
-# Новый эндпоинт для получения серверов по id пользователя, при этом JWT-токен передается как query-параметр.
 @router.get("/{user_id}/servers", response_model=Dict[str, List[dict]])
 def get_servers_for_user(
     user_id: int,
@@ -61,14 +60,12 @@ def get_servers_for_user(
     db_servers: Session = Depends(get_servers_db),
     user_db: Session = Depends(get_db)
 ):
-    # Получаем текущего пользователя из jwt-токена
     current_user = get_user_from_token(jwt_token, user_db)
     if current_user.id != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to view servers for this user"
         )
-    # Получаем серверы по типам с фильтром по owner_id:
     ssh_servers = db_servers.query(SSHServer).filter(SSHServer.owner_id == user_id).all()
     ftp_servers = db_servers.query(FTPServer).filter(FTPServer.owner_id == user_id).all()
     sftp_servers = db_servers.query(SFTPServer).filter(SFTPServer.owner_id == user_id).all()
