@@ -46,18 +46,46 @@ ServerLink - это комплексное решение для удалённ�
 ## Быстрый старт
 
 ```bash
-# Клонирование репозитория
-git clone https://github.com/Denbay0/HUMANHACK2025_MADRIGAL.git
-cd HUMANHACK2025_MADRIGAL
+    # Клонирование репозитория
+    git clone https://github.com/Denbay0/HUMANHACK2025_MADRIGAL.git
+    cd HUMANHACK2025_MADRIGAL
 ```
 
-# Запуск Backend container
+# Установка зависимостей
 ```bash
-cd
-docker-compose up -d
+    venv/Scripts/activate
+    pip install -r requirements.txt
 ```
 
-# Приложение будет доступно по адресу:
+# Запуск Backend части
 ```bash
-http://localhost:3000
+    uvicron backend.main:app --reload
+```
+
+# Документация будет доступна по адресу
+```bash
+    http://localhost:8000/docs
+```
+
+# Запуск Frontend части
+```bash
+    cd .\frontend\my-vite-react-app\src\
+    npm install
+    npm run dev
+```
+
+# Веб-приложение будет доступно по адресу
+```bash
+    http://localhost:5173/
+```
+
+# Запуск Apache контейнера (для RDP)
+```bash
+    cd HUMANHACK2025_MADRIGAL\docker\guacamole
+    docker-compose up -d
+```
+
+# Apache admin panel доступно по адресу
+```bash
+    http:///localhost:8080/guacamole/
 ```
