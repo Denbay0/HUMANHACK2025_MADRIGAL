@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+  # Обратный прокси, который слушает внешний порт 8000
+  reverse-proxy:
+    image: nginx:stable-alpine
+    container_name: reverse-proxy
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+      - guacamole
+    restart: always
+
+  # Фронтенд-приложение (Vite+React)
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    expose:
+      - "8000"
+    restart: always
+
+  # Backend-приложение
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    expose:
+      - "8000"
+    restart: always
+
+  # Guacamole база данных MySQL
+  mysql:
+    image: mysql:5.7
+    container_name: guac-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: somepassword
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: somepassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/guacamole/mysql-init:/docker-entrypoint-initdb.d
+    expose:
+      - "3306"
+    restart: always
+
+  # Guacamole сервис guacd
+  guacd:
+    image: guacamole/guacd
+    container_name: guacd
+    expose:
+      - "4822"
+    restart: always
+
+  # Guacamole веб-интерфейс
+  guacamole:
+    image: guacamole/guacamole
+    container_name: guacamole
+    environment:
+      GUACD_HOSTNAME: guacd
+      GUACAMOLE_DB: mysql
+      MYSQL_HOSTNAME: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: somepassword
+    depends_on:
+      - mysql
+      - guacd
+    expose:
+      - "8080"
+    restart: always
+
+volumes:
+  mysql_data:
