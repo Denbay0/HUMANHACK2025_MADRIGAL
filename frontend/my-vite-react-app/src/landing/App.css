@@ -10,7 +10,7 @@ body {
 
 .container {
   position: relative; 
- 
+  z-index: 1;
   width: 1460px;
   margin: 0 auto; 
 }
@@ -32,15 +32,13 @@ line-height: 78px;
 color: #FFFFFF;
 }
 .log{
-/* Rectangle 133 */
-
 box-sizing: border-box;
 
 position: absolute;
 width: 441px;
 height: 55px;
 left: 1000px;
-top: 170px;
+top: 95px;
 background-color: transparent;
 border: 3px solid #4A3961;
 border-radius: 15px;
@@ -551,4 +549,13 @@ body {
   height: 3220px;
   position: relative;
   overflow: hidden;
+}
+
+.name, .log, .line, .time, .uwu, .setu, .tex, .xz, .foto, 
+.line2, .kak, .arenda, .line3, .one, .te, .two, .z, .covet, 
+.three, .oformite, .doctyn, .server, .four, .work, .cub2, .cved {
+  position: absolute;
+  color: #fff;
+  font-family: 'Montserrat Alternates', sans-serif;
+  z-index: 3; /* Контент выше cub */
 }

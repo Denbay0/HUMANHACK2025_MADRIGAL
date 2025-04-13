@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from "react";
-import './App_prof.css';
+import { useNavigate } from "react-router-dom";
 
-// Модальное окно редактирования профиля
-// Модальное окно редактирования профиля с вкладкой смены пароля
-function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword }) {
+import "./App_prof.css";
+
+const getUserIdFromLocalStorage = () => {
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    console.log("User ID found in localStorage:", userId);
+    return parseInt(userId, 10);
+  } else {
+    console.error("User ID not found in localStorage");
+    return null;
+  }
+};
+
+const getUsernameFromLocalStorage = () => {
+  const username = localStorage.getItem("username");
+  if (username) {
+    console.log("Username found in localStorage:", username);
+    return username;
+  } else {
+    console.error("Username not found in localStorage");
+    return "Unknown";
+  }
+};
+
+function EditProfileModal({ user, onClose, onSave, onDelete }) {
   const initialFormState = {
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     email: user?.email || "",
     username: user?.username || "",
-    timezone: user?.timezone || "UTC+3:00"
+    timezone: user?.timezone || "UTC+3:00",
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -26,12 +48,12 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordData(prev => ({ ...prev, [name]: value }));
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmitProfile = (e) => {
@@ -48,51 +70,43 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
     }
 
     try {
-      // 1. Отправляем запрос на сервер для проверки старого пароля
-      const response = await fetch('https://your-server.com/api/check-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const checkResponse = await fetch("http://localhost:8000/auth/check-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          username: user.username,
           oldPassword: passwordData.oldPassword,
-          username: user.username, // или можно передать ID пользователя
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Не удалось проверить пароль');
+      const checkData = await checkResponse.json();
+      if (!checkResponse.ok) {
+        throw new Error(checkData.error || "Не удалось проверить пароль");
       }
 
-      // 2. Если старый пароль правильный, отправляем новый пароль
-      const updateResponse = await fetch('https://your-server.com/api/update-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const updateResponse = await fetch("http://localhost:8000/auth/update-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          username: user.username,
           newPassword: passwordData.newPassword,
-          username: user.username, // или можно передать ID пользователя
         }),
       });
 
       const updateData = await updateResponse.json();
-
       if (!updateResponse.ok) {
-        throw new Error(updateData.error || 'Не удалось обновить пароль');
+        throw new Error(updateData.error || "Не удалось обновить пароль");
       }
 
-      alert('Пароль успешно изменен');
+      alert("Пароль успешно изменён");
       setPasswordData({
-        oldPassword: '',
-        newPassword: '',
-        confirmNewPassword: '',
+        oldPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
       });
     } catch (error) {
-      console.error('Ошибка при изменении пароля:', error);
-      alert(error.message || 'Ошибка при изменении пароля');
+      console.error("Ошибка при изменении пароля:", error);
+      alert(error.message || "Ошибка при изменении пароля");
     }
   };
 
@@ -101,15 +115,14 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
   };
 
   const handleChangeTab = () => {
-    setIsPasswordTab(!isPasswordTab);
+    setIsPasswordTab((prev) => !prev);
   };
 
   const timezones = [
-    "UTC-12:00", "UTC-11:00", "UTC-10:00", "UTC-9:00", "UTC-8:00",
-    "UTC-7:00", "UTC-6:00", "UTC-5:00", "UTC-4:00", "UTC-3:00",
-    "UTC-2:00", "UTC-1:00", "UTC±0:00", "UTC+1:00", "UTC+2:00",
-    "UTC+3:00", "UTC+4:00", "UTC+5:00", "UTC+6:00", "UTC+7:00",
-    "UTC+8:00", "UTC+9:00", "UTC+10:00", "UTC+11:00", "UTC+12:00"
+    "UTC-12:00", "UTC-11:00", "UTC-10:00", "UTC-9:00", "UTC-8:00", "UTC-7:00",
+    "UTC-6:00", "UTC-5:00", "UTC-4:00", "UTC-3:00", "UTC-2:00", "UTC-1:00",
+    "UTC±0:00", "UTC+1:00", "UTC+2:00", "UTC+3:00", "UTC+4:00", "UTC+5:00",
+    "UTC+6:00", "UTC+7:00", "UTC+8:00", "UTC+9:00", "UTC+10:00", "UTC+11:00", "UTC+12:00",
   ];
 
   return (
@@ -133,34 +146,16 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
           <form onSubmit={handleSubmitPasswordChange}>
             <div className="form-group">
               <label>Старый пароль:</label>
-              <input
-                type="password"
-                name="oldPassword"
-                value={passwordData.oldPassword}
-                onChange={handlePasswordChange}
-              />
+              <input type="password" name="oldPassword" value={passwordData.oldPassword} onChange={handlePasswordChange} />
             </div>
-
             <div className="form-group">
               <label>Новый пароль:</label>
-              <input
-                type="password"
-                name="newPassword"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-              />
+              <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} />
             </div>
-
             <div className="form-group">
               <label>Подтвердите новый пароль:</label>
-              <input
-                type="password"
-                name="confirmNewPassword"
-                value={passwordData.confirmNewPassword}
-                onChange={handlePasswordChange}
-              />
+              <input type="password" name="confirmNewPassword" value={passwordData.confirmNewPassword} onChange={handlePasswordChange} />
             </div>
-
             <div className="modal-actions">
               <button type="submit" className="save-btn">Сменить пароль</button>
             </div>
@@ -169,57 +164,25 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
           <form onSubmit={handleSubmitProfile}>
             <div className="form-group">
               <label>Имя:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
             </div>
-
             <div className="form-group">
               <label>Фамилия:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
             </div>
-
-            <div className="form-group">
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-
+            {/* Email убран */}
             <div className="form-group">
               <label>Логин:</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                disabled
-              />
+              <input type="text" name="username" value={formData.username} disabled />
             </div>
-
             <div className="form-group">
               <label>Часовой пояс:</label>
-              <select
-                name="timezone"
-                value={formData.timezone}
-                onChange={handleChange}
-              >
-                {timezones.map(tz => (
+              <select name="timezone" value={formData.timezone} onChange={handleChange}>
+                {timezones.map((tz) => (
                   <option key={tz} value={tz}>{tz}</option>
                 ))}
               </select>
             </div>
-
             <div className="modal-actions">
               <button type="submit" className="save-btn">Сохранить изменения</button>
               <button type="button" className="reset-btn" onClick={handleReset}>Сбросить</button>
@@ -232,38 +195,93 @@ function EditProfileModal({ user, onClose, onSave, onDelete, onChangePassword })
   );
 }
 
-// Компонент профиля пользователя и список серверов
-function Profile({ user, servers, isLoading, onEditProfile }) {
+function Profile({ user, servers, isLoading, onDeleteServer }) {
+
+  // Функция подключения к SSH-серверу
+  const connectToServer = async (server) => {
+    try {
+      console.log("Подключение к серверу:", server);
+      const response = await fetch("http://localhost:8000/connections/ssh/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hostname: server.host,
+          port: parseInt(server.port, 10),
+          username: server.username,
+          password: server.password,
+          timeout: 10,
+        }),
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "Ошибка создания SSH-сессии");
+      }
+      const data = await response.json();
+      console.log("SSH-сессия создана, session_id:", data.session_id);
+      window.open(`/terminal/${data.session_id}`, "_blank");
+    } catch (error) {
+      console.error("Ошибка подключения к серверу:", error);
+      alert("Ошибка подключения: " + error.message);
+    }
+  };
+
+  // Функция удаления сервера (для SSH-сервера)
+  const deleteServer = async (server) => {
+    try {
+      const jwt = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:8000/ssh/${server.id}?jwt_token=${encodeURIComponent(jwt)}`,
+        { method: "DELETE" }
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.detail || "Ошибка удаления сервера");
+      }
+      alert("Сервер удалён");
+      onDeleteServer(server.id);
+    } catch (error) {
+      alert("Ошибка удаления: " + error.message);
+    }
+  };
+
   return (
     <div className="profile">
       {isLoading ? (
         <p>Загрузка данных...</p>
       ) : (
         <>
-          <h2 className="users">{user.firstName} {user.lastName}</h2>
-          <p className="mail">{user.email}</p>
-
+          {/* Отображаем username */}
+          <h2 className="users">{user.username}</h2>
           <div className="servers-container">
             <div className="profile-actions">
-            <button className="edit-profile-btn" onClick={onEditProfile}>
-              Редактировать профиль
-            </button>
+              <button className="edit-profile-btn" onClick={() => navigate("/terminal")}>
+                Подключиться к SSH-серверу
+              </button>
+              <button className="edit-profile-btn" onClick={() => navigate("/rdp")}>
+                Подключиться по RDP
+              </button>
             </div>
-
             <h3 className="servers-title">Мои серверы</h3>
             {servers.length > 0 ? (
               <div className="servers-list">
-                {servers.map(server => (
-                  <div key={server.id} className={`server-card ${server.isActive ? 'online' : 'offline'}`}>
-                    <h4 className="server-name">{server.name}</h4>
+                {servers.map((server) => (
+                  <div key={server.id} className="server-card">
+                    <h4 className="server-name">{server.server_name}</h4>
                     <div className="server-specs">
-                      <div className="spec-item"><span className="spec-label">CPU:</span> {server.cpu}</div>
-                      <div className="spec-item"><span className="spec-label">RAM:</span> {server.ram}</div>
-                      <div className="spec-item"><span className="spec-label">Storage:</span> {server.storage}</div>
-                      <div className="spec-item"><span className="spec-label">Price:</span> {server.price}</div>
+                      <div className="spec-item">
+                        <span className="spec-label">Hostname:</span> {server.host}
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-label">Username:</span> {server.username}
+                      </div>
                     </div>
-                    <div className={`server-status ${server.isActive ? 'online' : 'offline'}`}>
-                      {server.isActive ? '🟢 Online' : '🔴 Offline'}
+                    <div className="server-actions" style={{ display: "flex", gap: "10px" }}>
+                      <button className="edit-profile-btn" onClick={() => connectToServer(server)}>
+                        Подключиться
+                      </button>
+                      <button className="delete-btn" onClick={() => deleteServer(server)}>
+                        Удалить
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -278,93 +296,85 @@ function Profile({ user, servers, isLoading, onEditProfile }) {
   );
 }
 
-// Главный компонент приложения
 function App() {
+  const initialUserId = getUserIdFromLocalStorage();
+  const initialUsername = getUsernameFromLocalStorage();
+  console.log("Initial user id from localStorage:", initialUserId);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({
-    firstName: 'Влад',
-    lastName: 'Афонин',
-    email: 'afonin@example.com',
-    username: 'afonin.vlad',
-    timezone: 'UTC+3:00'
+    id: initialUserId,
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: initialUsername,
+    timezone: "UTC+3:00",
   });
   const [servers, setServers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  const mockServersData = [
-    {
-      id: 1,
-      name: "Игровой сервер",
-      cpu: "4 vCPU",
-      ram: "16 GB RAM",
-      storage: "320 GB SSD",
-      price: "$99 / mo (≈ 7500 руб)",
-      isActive: true
-    },
-    {
-      id: 2,
-      name: "Веб-хостинг",
-      cpu: "2 vCPU",
-      ram: "8 GB RAM",
-      storage: "160 GB SSD",
-      price: "$49 / mo (≈ 3700 руб)",
-      isActive: false
-    },
-    {
-      id: 3,
-      name: "База данных",
-      cpu: "8 vCPU",
-      ram: "32 GB RAM",
-      storage: "640 GB SSD",
-      price: "$199 / mo (≈ 15000 руб)",
-      isActive: true
-    }
-  ];
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchServers = async () => {
       try {
-        // Здесь будет реальный fetch если нужно
-        setServers(mockServersData);
+        console.log("Fetching servers for user id:", user.id);
+        const jwt = localStorage.getItem("token");
+        const response = await fetch(
+          `http://localhost:8000/users/${user.id}/servers?jwt_token=${encodeURIComponent(jwt)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Servers data received:", data);
+          const allServers = Object.values(data).flat();
+          setServers(allServers);
+        } else {
+          console.error("Ошибка загрузки серверов, статус", response.status);
+        }
       } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
+        console.error("Ошибка загрузки серверов:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    if (user && user.id) {
+      fetchServers();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user.id]);
 
   const handleEditProfile = () => {
-    console.log("Редактирование профиля");
     setIsEditing(true);
   };
 
   const handleSaveProfile = async (updatedUser) => {
     try {
-      // Тут может быть реальный fetch
       setUser(updatedUser);
       setIsEditing(false);
-      alert('Изменения сохранены!');
+      alert("Изменения сохранены!");
     } catch (error) {
-      console.error('Ошибка сохранения:', error);
-      alert('Ошибка при сохранении изменений');
+      console.error("Ошибка сохранения:", error);
+      alert("Ошибка при сохранении изменений");
     }
   };
 
   const handleDeleteProfile = () => {
-    if (window.confirm('Вы уверены, что хотите удалить профиль?')) {
+    if (window.confirm("Вы уверены, что хотите удалить профиль?")) {
       setUser({
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        timezone: ''
+        id: null,
+        firstName: "",
+        lastName: "",
+        email: "",
+        username: "",
+        timezone: "",
       });
       setIsEditing(false);
-      alert('Профиль удалён');
+      alert("Профиль удалён");
     }
+  };
+
+  // Функция удаления сервера (callback для Profile)
+  const handleDeleteServer = (serverId) => {
+    setServers((prevServers) => prevServers.filter((server) => server.id !== serverId));
   };
 
   return (
@@ -373,6 +383,50 @@ function App() {
         <div className='cub'></div>
         <h1 className='name'>ServerLink</h1>
         <hr className='line' />
+        <div id="lamp">
+            <div id="top"></div>
+            <div id="glass">
+              {/* Левые шарики - 20 штук */}
+              {[...Array(20)].map((_, index) => (
+                <div 
+                  key={`left-${index}`} 
+                  className="bubble"
+                  style={{
+                    '--delay': `${Math.random() * 5}s`,
+                    '--duration': `${30 + Math.random() * 20}s`,
+                    '--opacity': 0.6 + Math.random() * 0.4
+                  }}
+                />
+              ))}
+              
+              {/* Правые шарики - 20 штук */}
+              {[...Array(20)].map((_, index) => (
+                <div 
+                  key={`right-${index}`} 
+                  className="bubble-right"
+                  style={{
+                    '--delay': `${Math.random() * 5}s`,
+                    '--duration': `${30 + Math.random() * 20}s`,
+                    '--opacity': 0.6 + Math.random() * 0.4
+                  }}
+                />
+              ))}
+              
+              {/* Центральные шарики - 3 штуки */}
+              {[...Array(3)].map((_, index) => (
+                <div 
+                  key={`center-${index}`} 
+                  className="bubble-center"
+                  style={{
+                    '--delay': `${Math.random() * 5}s`,
+                    '--duration': `${30 + Math.random() * 20}s`,
+                    '--opacity': 0.6 + Math.random() * 0.4
+                  }}
+                />
+              ))}
+            </div>
+            <div id="bottom"></div>
+          </div>
 
         <Profile
           user={user}

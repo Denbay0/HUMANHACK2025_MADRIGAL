@@ -7,24 +7,32 @@ body {
   margin: 0;
   padding: 20px; /* Добавляем отступы от краёв экрана */
   box-sizing: border-box; /* Чтобы padding не увеличивал размеры */
+  font-family: 'Montserrat Alternates';
 }
 
 .cub {
   background: #1E172F;
   border-radius: 100px;
   width: 100%;
-  height: 3220px; 
+  height: 1720px; 
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
+  
+  box-shadow: 
+    0 0 10px #8A2BE2,  
+    0 0 20px #9932CC, 
+    0 0 30px #9400D3,    
+    0 0 40px #8B00FF;    
 }
+
 
 .container {
   position: relative;
   width: 1460px;
   margin: 0 auto;
-  height: 3220px; 
+  height: 1720px; 
 }
 .name {
   position: absolute;
@@ -39,7 +47,7 @@ body {
 .line {
   position: absolute;
   top: 236px;
-  width: 100%;
+  width: 99.4%;
   border: 5px solid #352D4F;
   z-index: 2;
 }
@@ -54,6 +62,7 @@ body {
 }
 
 .users, .mail {
+  z-index: 2;
   font-family: 'Montserrat Alternates';
   font-size: 40px;
   color: #FFFFFF;
@@ -199,6 +208,170 @@ border: none;
   box-shadow: none;
 }
 
+
+.users {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-size: 40px;
+  color: #FFFFFF;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Стили для серверов */
+.servers {
+  font-family: 'Montserrat Alternates', sans-serif;
+  margin-top: 50px;
+  color: white;
+  width: 80%;
+}
+
+.servers-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.servers-title {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.servers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.server-card {
+  background: rgba(30, 23, 47, 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.server-card:hover {
+  transform: translateY(-3px);
+}
+
+.server-name {
+  font-family: 'Montserrat Alternates', sans-serif;
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.server-specs {
+  font-family: 'Montserrat Alternates', sans-serif;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.spec-item {
+  background: #352D4F;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.spec-label {
+  font-weight: bold;
+  color: #a0a0a0;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.spec-value {
+  color: #ffffff;
+  font-size: 16px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.server-status {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.online {
+  font-family: 'Montserrat Alternates', sans-serif;
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.offline {
+  font-family: 'Montserrat Alternates', sans-serif;
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.no-servers {
+  text-align: center;
+  color: #ffffff;
+  font-size: 18px;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .server-specs {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .server-card {
+    padding: 15px;
+  }
+}
+
+/* Кнопка редактирования профиля */
+.profile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.edit-profile-btn {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  background: #2E2644;
+  border-radius: 35px;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.edit-profile-btn:hover {
+  background: #201b30;
+}
+
+.edit-profile-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Модальное окно */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -210,6 +383,7 @@ border: none;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .modal-content {
@@ -221,6 +395,10 @@ border: none;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  font-family: 'Montserrat Alternates', sans-serif;
+  opacity: 0; /* Начальная непрозрачность для всей модалки */
+  transform: translateY(-20px); /* Начальное смещение */
+  animation: fadeInUp 0.5s forwards; /* Анимация появления */
 }
 
 .modal-header {
@@ -228,11 +406,13 @@ border: none;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .modal-header h2 {
   color: white;
   margin: 0;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .close-btn {
@@ -241,6 +421,91 @@ border: none;
   color: white;
   font-size: 24px;
   cursor: pointer;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.modal-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-family: 'Montserrat Alternates', sans-serif;
+  position: relative;
+}
+
+.modal-tabs button {
+  font-family: 'Montserrat Alternates', sans-serif;
+  background: none;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  position: relative;
+  transition: color 0.3s ease; /* Плавный переход для текста */
+}
+
+.modal-tabs button.active {
+  color: #4CAF50; /* Зеленый цвет текста для активной вкладки */
+}
+
+/* Псевдо-элемент для линии */
+.modal-tabs button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0; /* Линия начинается с правой стороны */
+  width: 0;
+  height: 2px;
+  background-color: #4CAF50;
+  transition: all 0.3s ease; /* Плавный переход для линии */
+}
+
+.modal-tabs button.active::after {
+  width: 100%; /* Линия растягивается на всю ширину активной вкладки */
+  right: 0; /* Линия остается с правой стороны */
+}
+
+.modal-tabs button:not(.active) {
+  opacity: 0.7; /* Немного прозрачности для неактивных вкладок */
+}
+
+.modal-tabs button:hover {
+  opacity: 1; /* Восстановление непрозрачности при наведении */
+}
+
+/* Анимация для плавного появления */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Появление элементов ниже вкладок при активации вкладки */
+.modal-content .section {
+  opacity: 0; /* Начальная непрозрачность для всех элементов */
+  transform: translateY(20px); /* Начальная позиция */
+  animation: fadeInSection 0.5s forwards; /* Плавное появление */
+}
+
+.modal-tabs button.active ~ .modal-content .section {
+  animation-delay: 0.3s; /* Задержка для элементов */
+}
+
+/* Анимация появления для элементов в модалке */
+@keyframes fadeInSection {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .user-info {
@@ -249,20 +514,25 @@ border: none;
   border-radius: 8px;
   margin-bottom: 20px;
   color: #DDD;
+  font-family: 'Montserrat Alternates', sans-serif;
+  opacity: 0; /* Начальная непрозрачность */
 }
 
 .user-info p {
   margin: 5px 0;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .form-group {
   margin-bottom: 15px;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 5px;
   color: #DDD;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .form-group input,
@@ -273,18 +543,21 @@ border: none;
   border: 1px solid #4A3F6B;
   background: #3A3152;
   color: white;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .form-group input:disabled,
 .form-group select:disabled {
   background: #2A2342;
   color: #999;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .modal-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 25px;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .save-btn, .reset-btn, .delete-btn {
@@ -293,6 +566,8 @@ border: none;
   border: none;
   cursor: pointer;
   font-weight: 500;
+  font-family: 'Montserrat Alternates', sans-serif;
+  transition: all 0.3s;
 }
 
 .save-btn {
@@ -308,4 +583,209 @@ border: none;
 .delete-btn {
   background: #F44336;
   color: white;
+}
+
+.save-btn:hover, .reset-btn:hover, .delete-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --body-background: radial-gradient(#500, #000);
+  --body-after-background: linear-gradient(rgba(255, 255, 255, .6), rgba(128, 128, 255, .3));
+  --top-bottom-background: linear-gradient(111deg, #111 0%, #ccc 45%, #ccc 50%, #888 60%, #111);
+  --top-box-shadow: 0 4vh 16vh 16vh rgba(0, 0, 0, .5),
+    0 1vh 4vh 4vh rgba(0, 0, 0, .3),
+    inset 0 .5vh .5vh rgba(255, 255, 255, .5),
+    inset 0 -.3vh .5vh rgba(128, 0, 0, .5);
+  --bottom-box-shadow: inset 0 -.5vh .5vh rgba(0, 0, 0, .5),
+    inset 0 .5vh .5vh rgba(128, 0, 0, .5);
+  --glass-background: linear-gradient(blue 30%, #60a 80%, #a06 100%);
+  --glass-box-shadow: inset 0 -5vh 1vh 1vh rgba(255, 0, 0, .6), 0 0 2.5px .2px #808;
+}
+
+
+/* Стили для левых шариков */
+.bubble {
+  height: 16vh;
+  width: 16vh;
+  border-radius: 50%;
+  background: #BC13FE;
+  position: absolute;
+  filter: blur(4vh);
+  animation: updown linear 37s infinite,
+    leftright ease-in-out 23s infinite,
+    vastag linear 29s infinite,
+    forog linear 31s infinite;
+  /* Добавляем случайное смещение для предотвращения перекрытия */
+  top: calc(50% + (random() * 20vh - 10vh));
+  left: calc(50% + (random() * 20vh - 10vh));
+}
+
+.bubble:nth-child(2) {
+  animation: updown ease-in 41s infinite,
+    leftright ease-in-out 47s infinite,
+    vastag linear 23s infinite,
+    forog linear 29s infinite;
+}
+
+.bubble:last-child {
+  animation: updown linear 53s infinite,
+    leftright ease-in-out 29s infinite,
+    vastag linear 19s infinite,
+    forog linear 37s infinite;
+}
+
+/* Стили для правых шариков (сделаем их меньше) */
+.bubble-right {
+  height: 12vh; /* Уменьшаем размер */
+  width: 12vh;  /* Уменьшаем размер */
+  border-radius: 50%;
+  background: #BC13FE;
+  position: absolute;
+  filter: blur(4vh);
+  animation: updown linear 37s infinite,
+    rightleft ease-in-out 23s infinite,
+    vastag linear 29s infinite,
+    forog linear 31s infinite;
+  /* Сдвиг правых шариков для уменьшения вероятности столкновений */
+  top: calc(50% + (random() * 20vh - 10vh));
+  right: calc(50% + (random() * 20vh - 10vh));
+}
+
+.bubble-right:nth-child(2) {
+  animation: updown ease-in 41s infinite,
+    rightleft ease-in-out 47s infinite,
+    vastag linear 23s infinite,
+    forog linear 29s infinite;
+}
+
+.bubble:nth-child(3) {
+  animation: updown ease-out 43s infinite,
+    rightleft ease-in-out 53s infinite,
+    vastag linear 29s infinite,
+    forog linear 31s infinite;
+}
+
+.bubble:last-child {
+  animation: updown linear 53s infinite,
+    rightleft ease-in-out 29s infinite,
+    vastag linear 19s infinite,
+    forog linear 37s infinite;
+}
+
+/* Новый keyframe для правого движения */
+@keyframes rightleft {
+  0% {
+    right: 0;
+  }
+  50% {
+    right: 80%;
+  }
+  100% {
+    right: 0;
+  }
+}
+
+/* Стили для центральных шариков */
+.bubble-center {
+  height: 16vh;
+  width: 16vh;
+  border-radius: 50%;
+  background: #BC13FE;
+  position: absolute;
+  filter: blur(4vh);
+  animation: updown linear 37s infinite,
+    centerwave ease-in-out 23s infinite,
+    vastag linear 29s infinite,
+    forog linear 31s infinite;
+  /* Случайное смещение для центральных шариков */
+  left: calc(50% + (random() * 10vh - 5vh)); /* Отцентровка */
+}
+
+/* Новая анимация для центральных шариков */
+@keyframes centerwave {
+  0%, 100% {
+    transform: translateX(-50%);
+  }
+  25% {
+    transform: translateX(-80%);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  75% {
+    transform: translateX(-20%);
+  }
+}
+
+@keyframes updown {
+  0% {
+    top: -16vh;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: -16vh;
+  }
+}
+
+@keyframes leftright {
+  0% {
+    left: 0;
+  }
+  50% {
+    left: 80%;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+/* Новый keyframe для движения справа */
+@keyframes rightleft {
+  0% {
+    right: 0;
+  }
+  50% {
+    right: 80%;
+  }
+  100% {
+    right: 0;
+  }
+}
+
+@keyframes vastag {
+  0% {
+    width: 8vh;
+  }
+  50% {
+    width: 32vh;
+  }
+  100% {
+    width: 8vh;
+  }
+}
+
+@keyframes forog {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#lamp {
+  position: fixed; /* Или absolute в зависимости от нужного поведения */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0; /* Под основным контентом */
+  pointer-events: none; /* Чтобы не мешали взаимодействию */
 }
